@@ -3,7 +3,6 @@ package cn.ucai.superwechat.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import cn.ucai.fulicenter.application.FuLiCenterApplication;
 
 /**
  * Created by clawpo on 2017/3/21.
@@ -17,9 +16,9 @@ public class SharePrefrenceUtils {
     SharedPreferences.Editor editor;
 
     public SharePrefrenceUtils() {
-        sharedPreferences = FuLiCenterApplication.getInstance().
+        /*sharedPreferences = FuLiCenterApplication.getInstance().
                 getSharedPreferences(SHARE_PREFRENCE_NAME, Context.MODE_PRIVATE);
-        editor = sharedPreferences.edit();
+        editor = sharedPreferences.edit();*/
     }
 
     public static SharePrefrenceUtils getInstance(){

@@ -29,7 +29,7 @@
     <string name="delete_video">Delete video</string>
     <string name="delete">Delete</string>
     <string name="resend">Resend</string>
-    <string name="confirm_resend">Confirm to resend？</string>
+    <string name="confirm_resend">确认密码</string>
     <string name="connect_failuer_toast">Please check the network or try again later</string>
     <string name="network_unavailable">The network connection is not available, please check the network</string>
     <string name="copy">Copy</string>
@@ -128,10 +128,10 @@
     <string name="Group_of_Lord">The group owner</string>
     <string name="Introduction">Brief</string>
     <string name="To_join_the_chat">Join the group</string>
-    <string name="login">Login</string>
-    <string name="user_name">User name</string>
-    <string name="password">Password</string>
-    <string name="register">Register</string>
+    <string name="login">登录</string>
+    <string name="user_name">用户名</string>
+    <string name="password">密码</string>
+    <string name="register">注册</string>
     <string name="confirmpassword">Confirm password</string>
     <string name="downwaiting">Downloading the file, please wait a moment</string>
     <string name="mute">Mute</string>

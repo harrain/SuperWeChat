@@ -26,4 +26,9 @@ public class MFGT {
     public static void gotoLogin(Activity activity){
         startActivity(activity, LoginActivity.class);
     }
+
+    public static void finish(Activity activity){
+        activity.overridePendingTransition(R.anim.push_right_in,R.anim.push_right_out);
+        activity.finish();
+    }
 }

@@ -13,9 +13,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import cn.ucai.fulicenter.R;
-import cn.ucai.fulicenter.application.I;
-import cn.ucai.fulicenter.data.bean.User;
+import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.I;
+import cn.ucai.superwechat.model.User;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -344,39 +344,39 @@ public class ImageLoader {
         }
     }
 
-    public static void downloadImg(Context context,ImageView imageView,String thumb){
+    /*public static void downloadImg(Context context,ImageView imageView,String thumb){
         setImage(I.DOWNLOAD_IMG_URL+thumb,context,imageView,true);
-    }
+    }*/
 
-    public static void downloadImg(Context context,ImageView imageView,String thumb,boolean isDragging){
+    /*public static void downloadImg(Context context,ImageView imageView,String thumb,boolean isDragging){
         setImage(I.DOWNLOAD_IMG_URL+thumb,context,imageView,isDragging);
-    }
+    }*/
 
-    public static void setImage(String url,Context context,ImageView imageView,boolean isDragging){
+    /*public static void setImage(String url,Context context,ImageView imageView,boolean isDragging){
         ImageLoader.build(url)
                 .defaultPicture(R.drawable.nopic)
                 .imageView(imageView)
                 .setDragging(isDragging)
                 .showImage(context);
-    }
+    }*/
     //http://101.251.196.90:8000/FuLiCenterServerV2.0/downloadAvatar?
     // name_or_hxid=a952700&avatarType=user_avatar&m_avatar_suffix=.jpg&width=200&height=200
     //http://101.251.196.90:8000/FuLiCenterServerV2.0/downloadAvatar?
     // name_or_hxid=a952700&avatarType=0&m_avatar_suffix=.jpg&width=200&height=200
     public static String getAvatarUrl(User user){
         if(user!=null) {
-            String url = I.DOWNLOAD_AVATAR_URL + I.NAME_OR_HXID + "=" + user.getMuserName()
-                    + I.AND + I.AVATAR_TYPE + "=" + user.getMavatarPath() + I.AND + I.AVATAR_SUFFIX
+            String url = I.REQUEST_DOWNLOAD_AVATAR + I.NAME_OR_HXID + "=" + user.getMuserName()
+                    + I.AND + I.AVATAR_TYPE + "=" + user.getMavatarPath() + I.AND + I.AVATAR_SUFFIX_JPG
                     + "=" + user.getMavatarSuffix() + I.AND + "width=200&height=200"+"&"+ user.getMavatarLastUpdateTime();
             L.e("useravatar=" + url);
             return url;
         }
         return null;
     }
-    public static void setAvatar(String url,Context context,ImageView imageView){
+    /*public static void setAvatar(String url,Context context,ImageView imageView){
         ImageLoader.build(url)
                 .defaultPicture(R.drawable.contactlogo)
                 .imageView(imageView)
                 .showImage(context);
-    }
+    }*/
 }

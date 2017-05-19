@@ -5,19 +5,16 @@
     android:background="#eff2f6"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <LinearLayout
+        android:background="@color/black"
         android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/em_welcom_logo" />
-    </RelativeLayout>
+        android:layout_height="wrap_content">
+        <include layout="@layout/toolbar"
+            android:id="@+id/regist_toobar"/>
+    </LinearLayout>
 
     <LinearLayout
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_marginLeft="8dp"
@@ -62,23 +59,15 @@
             android:layout_marginTop="10dp"
             android:background="#fff" >
 
-            <ImageView
-                android:id="@+id/iv_password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dip"
-                android:src="@drawable/em_icon_pwd" />
+
 
             <EditText
-                android:id="@+id/password"
+                android:id="@+id/nickname_tv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/iv_password"
                 android:background="@null"
-                android:hint="@string/password"
+                android:hint="昵称"
                 android:inputType="textPassword"
                 android:paddingLeft="10dip"
                 android:singleLine="true"
@@ -103,17 +92,39 @@
                 android:src="@drawable/em_icon_pwd" />
 
             <EditText
-                android:id="@+id/confirm_password"
+                android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@id/iv_password2"
                 android:background="@null"
-                android:hint="@string/confirmpassword"
+                android:hint="@string/password"
                 android:inputType="textPassword"
                 android:paddingLeft="10dip"
                 android:singleLine="true"
                 android:textSize="18sp" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:background="#fff" >
+        <EditText
+            android:id="@+id/confirm_password"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:hint="确认密码"
+            android:inputType="textPassword"
+            android:paddingLeft="10dip"
+            android:singleLine="true"
+            android:textSize="18sp" />
         </RelativeLayout>
 
         <LinearLayout
@@ -130,7 +141,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/em_button_login_bg"
+                android:background="@color/green"
                 android:onClick="register"
                 android:paddingBottom="7dp"
                 android:paddingTop="7dp"
