@@ -2,11 +2,15 @@ package cn.ucai.superwechat.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMClient;
+
+import cn.ucai.superwechat.SigninActivity;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
 import com.hyphenate.util.EasyUtils;
@@ -25,19 +29,35 @@ public class SplashActivity extends BaseActivity {
 		super.onCreate(arg0);
 
 		RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.splash_root);
-		TextView versionText = (TextView) findViewById(R.id.tv_version);
 
-		versionText.setText(getVersion());
+
 		AlphaAnimation animation = new AlphaAnimation(0.3f, 1.0f);
 		animation.setDuration(1500);
 		rootLayout.startAnimation(animation);
+
+		findViewById(R.id.login_btn).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+				overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
+				finish();
+			}
+		});
+		findViewById(R.id.signup_btn).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(SplashActivity.this, RegisterActivity.class));
+				overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
+				finish();
+			}
+		});
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 
-		new Thread(new Runnable() {
+		Runnable runnable = new Runnable() {
 			public void run() {
 				if (SuperWeChatHelper.getInstance().isLoggedIn()) {
 					// auto login mode, make sure all group and conversation is loaed before enter the main screen
@@ -62,17 +82,10 @@ public class SplashActivity extends BaseActivity {
 						startActivity(new Intent(SplashActivity.this, MainActivity.class));
 					}
 					finish();
-				}else {
-					try {
-						Thread.sleep(sleepTime);
-					} catch (InterruptedException e) {
-					}
-					startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-					finish();
 				}
 			}
-		}).start();
-
+		};
+		new Handler().post(runnable);
 	}
 	
 	/**
