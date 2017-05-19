@@ -13,38 +13,47 @@
  */
 package cn.ucai.superwechat.ui;
 
+import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
+
+import cn.ucai.superwechat.SigninActivity;
 import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.db.SuperWeChatDBManager;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
-
 /**
  * Login screen
  * 
  */
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 	private static final String TAG = "LoginActivity";
 	public static final int REQUEST_CODE_SETNICK = 1;
-	private EditText usernameEditText;
+	private AutoCompleteTextView usernameEditText;
 	private EditText passwordEditText;
 
 	private boolean progressShow;
@@ -53,6 +62,13 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.login_toolbar);
+		setSupportActionBar(toolbar);
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
 
 		// enter the main activity if already logged in
 		if (SuperWeChatHelper.getInstance().isLoggedIn()) {
@@ -63,7 +79,7 @@ public class LoginActivity extends BaseActivity {
 		}
 		setContentView(R.layout.em_activity_login);
 
-		usernameEditText = (EditText) findViewById(R.id.username);
+		usernameEditText = (AutoCompleteTextView) findViewById(R.id.username);
 		passwordEditText = (EditText) findViewById(R.id.password);
 
 		// if user changed, clear the password
@@ -99,6 +115,30 @@ public class LoginActivity extends BaseActivity {
 
 		if (SuperWeChatHelper.getInstance().getCurrentUsernName() != null) {
 			usernameEditText.setText(SuperWeChatHelper.getInstance().getCurrentUsernName());
+		}
+		populateAutoComplete();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == android.R.id.home){
+			finish();
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		finish();
+	}
+
+	private void populateAutoComplete() {
+
+
+		if (Build.VERSION.SDK_INT >= 14) {
+			// Use ContactsContract.Profile (API 14+)
+			getLoaderManager().initLoader(0, null, this);
 		}
 	}
 
@@ -217,5 +257,20 @@ public class LoginActivity extends BaseActivity {
 		if (autoLogin) {
 			return;
 		}
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		return null;
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+
 	}
 }
