@@ -57,18 +57,18 @@ android {
         release.setRoot('build-types/release')
     }
 
-    
-	signingConfigs {
-		release {
-			storeFile file("../emclient-android/hyphenate.keystore")
-			storePassword "easemob"
-			keyAlias "easemob"
-			keyPassword "easemob"
-		}
-	}
-	buildTypes {
+
+    signingConfigs {
         release {
-			signingConfig android.signingConfigs.release
+            storeFile file("../emclient-android/hyphenate.keystore")
+            storePassword "easemob"
+            keyAlias "easemob"
+            keyPassword "easemob"
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig android.signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
@@ -85,4 +85,11 @@ dependencies {
     //    }
     compile files('libs/android-support-multidex.jar')
     compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.okio:okio:1.10.0'
+    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.4.1'
+    compile 'com.google.code.gson:gson:2.7'
 }
