@@ -36,6 +36,7 @@ import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.data.OnCompleteListener;
 import cn.ucai.superwechat.data.net.IUserModel;
 import cn.ucai.superwechat.data.net.UserModel;
+import cn.ucai.superwechat.model.RegisterInfo;
 import cn.ucai.superwechat.model.User;
 import cn.ucai.superwechat.utils.MD5;
 import cn.ucai.superwechat.utils.MFGT;
@@ -145,7 +146,7 @@ public class RegisterActivity extends BaseActivity {
                             public void onSuccess(String s) {
                                 L.e(TAG, "s=" + s);
 
-                                registerSuccess();
+                                handleJson(s);
 
                             }
 
@@ -155,6 +156,25 @@ public class RegisterActivity extends BaseActivity {
                         });
             }
 
+    }
+
+    private void handleJson(String s){
+        if (s != null) {
+            Result result = ResultUtils.getResultFromJson(s, RegisterInfo.class);
+            if (result != null) {
+                Log.e(TAG,result.toString());
+                if (result.getRetCode() == I.MSG_REGISTER_USERNAME_EXISTS) {
+                    mUsername.requestFocus();
+                    mUsername.setError(getString(R.string.register_fail_exists));
+                } else if (result.getRetCode() == I.MSG_REGISTER_FAIL) {
+                    mUsername.requestFocus();
+                    mUsername.setError(getString(R.string.register_fail));
+                } else {
+                    registerSuccess();
+                }
+            }
+
+        }
     }
 
     private void registerSuccess(){

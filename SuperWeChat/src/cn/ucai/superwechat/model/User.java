@@ -1,117 +1,120 @@
 package cn.ucai.superwechat.model;
 
 
-import cn.ucai.superwechat.I;
-
 /**
  * Created by clawpo on 2016/10/21.
  */
 
 public class User {
 
+
     /**
-     * muserName : a952700
-     * muserNick : 士大夫
-     * mavatarId : 72
-     * mavatarPath : user_avatar
-     * mavatarSuffix : .jpg
-     * mavatarType : 0
-     * mavatarLastUpdateTime : 1476262984280
+     * retCode : 0
+     * retMsg : true
+     * retData : {"muserName":"ren001","muserNick":"哈哈我","mavatarId":1911,"mavatarPath":"user_avatar","mavatarSuffix":null,"mavatarType":0,"mavatarLastUpdateTime":"1495194630907"}
      */
 
-    private String muserName;
-    private String muserNick;
-    private int mavatarId;
-    private String mavatarPath;
-    private String mavatarSuffix;
-    private int mavatarType;
-    private String mavatarLastUpdateTime;
+    private int retCode;
+    private boolean retMsg;
+    private RetDataBean retData;
 
-    public String getMuserName() {
-        return muserName;
+    public int getRetCode() {
+        return retCode;
     }
 
-    public void setMuserName(String muserName) {
-        this.muserName = muserName;
+    public void setRetCode(int retCode) {
+        this.retCode = retCode;
     }
 
-    public String getMuserNick() {
-        return muserNick;
+    public boolean isRetMsg() {
+        return retMsg;
     }
 
-    public void setMuserNick(String muserNick) {
-        this.muserNick = muserNick;
+    public void setRetMsg(boolean retMsg) {
+        this.retMsg = retMsg;
     }
 
-    public int getMavatarId() {
-        return mavatarId;
+    public RetDataBean getRetData() {
+        return retData;
     }
 
-    public void setMavatarId(int mavatarId) {
-        this.mavatarId = mavatarId;
+    public void setRetData(RetDataBean retData) {
+        this.retData = retData;
     }
 
-    public String getMavatarPath() {
-        return mavatarPath;
-    }
+    public static class RetDataBean {
+        /**
+         * muserName : ren001
+         * muserNick : 哈哈我
+         * mavatarId : 1911
+         * mavatarPath : user_avatar
+         * mavatarSuffix : null
+         * mavatarType : 0
+         * mavatarLastUpdateTime : 1495194630907
+         */
 
-    public void setMavatarPath(String mavatarPath) {
-        this.mavatarPath = mavatarPath;
-    }
+        private String muserName;
+        private String muserNick;
+        private int mavatarId;
+        private String mavatarPath;
+        private Object mavatarSuffix;
+        private int mavatarType;
+        private String mavatarLastUpdateTime;
 
-    public String getMavatarSuffix() {
-        return mavatarSuffix!=null?mavatarSuffix: I.AVATAR_SUFFIX_JPG;
-    }
+        public String getMuserName() {
+            return muserName;
+        }
 
-    public void setMavatarSuffix(String mavatarSuffix) {
-        this.mavatarSuffix = mavatarSuffix;
-    }
+        public void setMuserName(String muserName) {
+            this.muserName = muserName;
+        }
 
-    public int getMavatarType() {
-        return mavatarType;
-    }
+        public String getMuserNick() {
+            return muserNick;
+        }
 
-    public void setMavatarType(int mavatarType) {
-        this.mavatarType = mavatarType;
-    }
+        public void setMuserNick(String muserNick) {
+            this.muserNick = muserNick;
+        }
 
-    public String getMavatarLastUpdateTime() {
-        return mavatarLastUpdateTime;
-    }
+        public int getMavatarId() {
+            return mavatarId;
+        }
 
-    public void setMavatarLastUpdateTime(String mavatarLastUpdateTime) {
-        this.mavatarLastUpdateTime = mavatarLastUpdateTime;
-    }
+        public void setMavatarId(int mavatarId) {
+            this.mavatarId = mavatarId;
+        }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
+        public String getMavatarPath() {
+            return mavatarPath;
+        }
 
-        User user = (User) o;
+        public void setMavatarPath(String mavatarPath) {
+            this.mavatarPath = mavatarPath;
+        }
 
-        if (!getMuserName().equals(user.getMuserName())) return false;
-        return getMavatarLastUpdateTime().equals(user.getMavatarLastUpdateTime());
+        public Object getMavatarSuffix() {
+            return mavatarSuffix;
+        }
 
-    }
+        public void setMavatarSuffix(Object mavatarSuffix) {
+            this.mavatarSuffix = mavatarSuffix;
+        }
 
-    @Override
-    public int hashCode() {
-        int result = getMuserName().hashCode();
-        result = 31 * result + getMavatarLastUpdateTime().hashCode();
-        return result;
-    }
+        public int getMavatarType() {
+            return mavatarType;
+        }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "muserName='" + muserName + '\'' +
-                ", muserNick='" + muserNick + '\'' +
-                ", mavatarId=" + mavatarId +
-                ", mavatarPath='" + mavatarPath + '\'' +
-                ", mavatarSuffix='" + mavatarSuffix + '\'' +
-                ", mavatarType=" + mavatarType +
-                ", mavatarLastUpdateTime='" + mavatarLastUpdateTime + '\'' +
-                '}';
+        public void setMavatarType(int mavatarType) {
+            this.mavatarType = mavatarType;
+        }
+
+        public String getMavatarLastUpdateTime() {
+            return mavatarLastUpdateTime;
+        }
+
+        public void setMavatarLastUpdateTime(String mavatarLastUpdateTime) {
+            this.mavatarLastUpdateTime = mavatarLastUpdateTime;
+        }
     }
 }

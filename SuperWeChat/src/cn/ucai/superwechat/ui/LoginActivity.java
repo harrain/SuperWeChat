@@ -40,11 +40,20 @@ import android.widget.Toolbar;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.SigninActivity;
 import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.data.OnCompleteListener;
+import cn.ucai.superwechat.data.net.IUserModel;
+import cn.ucai.superwechat.data.net.UserModel;
 import cn.ucai.superwechat.db.SuperWeChatDBManager;
+import cn.ucai.superwechat.model.User;
+import cn.ucai.superwechat.utils.MFGT;
+import cn.ucai.superwechat.utils.Result;
+import cn.ucai.superwechat.utils.ResultUtils;
+
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 /**
  * Login screen
@@ -58,6 +67,10 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
 
 	private boolean progressShow;
 	private boolean autoLogin = false;
+	private IUserModel model;
+	private String currentUsername;
+	private String currentPassword;
+	private ProgressDialog pd;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -152,8 +165,8 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
 			Toast.makeText(this, R.string.network_isnot_available, Toast.LENGTH_SHORT).show();
 			return;
 		}
-		String currentUsername = usernameEditText.getText().toString().trim();
-		String currentPassword = passwordEditText.getText().toString().trim();
+		currentUsername = usernameEditText.getText().toString().trim();
+		currentPassword = passwordEditText.getText().toString().trim();
 
 		if (TextUtils.isEmpty(currentUsername)) {
 			Toast.makeText(this, R.string.User_name_cannot_be_empty, Toast.LENGTH_SHORT).show();
@@ -165,7 +178,7 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
 		}
 
 		progressShow = true;
-		final ProgressDialog pd = new ProgressDialog(LoginActivity.this);
+		pd = new ProgressDialog(LoginActivity.this);
 		pd.setCanceledOnTouchOutside(false);
 		pd.setOnCancelListener(new OnCancelListener() {
 
@@ -194,29 +207,8 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
 			public void onSuccess() {
 				Log.d(TAG, "login: onSuccess");
 
+				loginToAppServer();
 
-				// ** manually load all local groups and conversation
-			    EMClient.getInstance().groupManager().loadAllGroups();
-			    EMClient.getInstance().chatManager().loadAllConversations();
-
-			    // update current user's display name for APNs
-				boolean updatenick = EMClient.getInstance().pushManager().updatePushNickname(
-						SuperWeChatApplication.currentUserNick.trim());
-				if (!updatenick) {
-					Log.e("LoginActivity", "update current user nick fail");
-				}
-
-				if (!LoginActivity.this.isFinishing() && pd.isShowing()) {
-				    pd.dismiss();
-				}
-				// get user's info (this should be get from App's server or 3rd party service)
-				SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
-
-				Intent intent = new Intent(LoginActivity.this,
-						MainActivity.class);
-				startActivity(intent);
-
-				finish();
 			}
 
 			@Override
@@ -240,8 +232,65 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
 			}
 		});
 	}
+	//都登录成功后的环信配置
+	private void logonForSet(){
+		// ** manually load all local groups and conversation
+		EMClient.getInstance().groupManager().loadAllGroups();
+		EMClient.getInstance().chatManager().loadAllConversations();
 
-	
+		// update current user's display name for APNs
+		boolean updatenick = EMClient.getInstance().pushManager().updatePushNickname(
+				SuperWeChatApplication.currentUserNick.trim());
+		if (!updatenick) {
+			Log.e("LoginActivity", "update current user nick fail");
+		}
+
+		if (!LoginActivity.this.isFinishing() && pd.isShowing()) {
+			pd.dismiss();
+		}
+		// get user's info (this should be get from App's server or 3rd party service)
+		SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
+	}
+
+	private void loginToAppServer(){
+		model = new UserModel();
+		model.login(this, currentUsername, currentPassword, new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String result) {
+				handleJson(result);
+			}
+
+			@Override
+			public void onError(String error) {
+
+			}
+		});
+	}
+
+	private void handleJson(String s){
+		if (s != null) {
+			Result result = ResultUtils.getResultFromJson(s, User.class);
+			if (result != null) {
+				Log.e(TAG,result.toString());
+				if (result.getRetCode() == I.MSG_LOGIN_UNKNOW_USER) {
+					usernameEditText.requestFocus();
+					usernameEditText.setError(getString(R.string.login_unkown_user));
+				} else if (result.getRetCode() == I.MSG_LOGIN_ERROR_PASSWORD) {
+					passwordEditText.requestFocus();
+					passwordEditText.setError(getString(R.string.login_password_error));
+				} else {
+					loginSuccess();
+				}
+			}
+
+		}
+	}
+
+	private void loginSuccess(){
+		logonForSet();
+		MFGT.gotoMain(this);
+		MFGT.finish(this);
+	}
 	/**
 	 * register
 	 * 
