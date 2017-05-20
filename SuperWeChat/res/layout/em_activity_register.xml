@@ -5,13 +5,10 @@
     android:background="#eff2f6"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:background="@color/black"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <include layout="@layout/toolbar"
-            android:id="@+id/regist_toobar"/>
-    </LinearLayout>
+    <include layout="@layout/toolbar"
+        android:id="@+id/register_toolbar"/>
+
+
 
     <LinearLayout
         android:layout_marginTop="10dp"

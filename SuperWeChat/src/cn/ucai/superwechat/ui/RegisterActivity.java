@@ -22,6 +22,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.EMError;
@@ -30,6 +32,7 @@ import com.hyphenate.exceptions.HyphenateException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
@@ -37,16 +40,14 @@ import cn.ucai.superwechat.data.OnCompleteListener;
 import cn.ucai.superwechat.data.net.IUserModel;
 import cn.ucai.superwechat.data.net.UserModel;
 import cn.ucai.superwechat.model.RegisterInfo;
-import cn.ucai.superwechat.model.User;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.MD5;
 import cn.ucai.superwechat.utils.MFGT;
 import cn.ucai.superwechat.utils.Result;
 import cn.ucai.superwechat.utils.ResultUtils;
-import cn.ucai.superwechat.utils.L;
 
 /**
  * register screen
- *
  */
 public class RegisterActivity extends BaseActivity {
     @BindView(R.id.username)
@@ -59,7 +60,11 @@ public class RegisterActivity extends BaseActivity {
     EditText mConfirmPassword;
 
     IUserModel model;
-    String username,usernick;
+    String username, usernick;
+    @BindView(R.id.img_back)
+    ImageView imgBack;
+    @BindView(R.id.txt_title)
+    TextView txtTitle;
     private String pwd;
     private String confirm_pwd;
     private String TAG = "registacitviy";
@@ -71,27 +76,24 @@ public class RegisterActivity extends BaseActivity {
         setContentView(R.layout.em_activity_register);
         ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.regist_toobar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.register_toolbar);
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
+        imgBack.setVisibility(View.VISIBLE);
+        txtTitle.setText("注册");
+        txtTitle.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
+
+
+    @OnClick(R.id.img_back)
+    public void backToFinish() {
+        MFGT.finish(this);
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        MFGT.finish(this);
     }
 
     public void register(View view) {
@@ -141,32 +143,32 @@ public class RegisterActivity extends BaseActivity {
 
     private void registToAppServer() {
 
-            if (checkInput()) {
-                Log.e(TAG,"check完毕");
-                model = new UserModel();
-                model.register(RegisterActivity.this, username, usernick, MD5.getMessageDigest(pwd),
-                        new OnCompleteListener<String>() {
-                            @Override
-                            public void onSuccess(String s) {
-                                L.e(TAG, "s=" + s);
+        if (checkInput()) {
+            Log.e(TAG, "check完毕");
+            model = new UserModel();
+            model.register(RegisterActivity.this, username, usernick, MD5.getMessageDigest(pwd),
+                    new OnCompleteListener<String>() {
+                        @Override
+                        public void onSuccess(String s) {
+                            L.e(TAG, "s=" + s);
 
-                                handleJson(s);
+                            handleJson(s);
 
-                            }
+                        }
 
-                            @Override
-                            public void onError(String error) {
-                            }
-                        });
-            }
+                        @Override
+                        public void onError(String error) {
+                        }
+                    });
+        }
 
     }
 
-    private void handleJson(String s){
+    private void handleJson(String s) {
         if (s != null) {
             Result result = ResultUtils.getResultFromJson(s, RegisterInfo.class);
             if (result != null) {
-                Log.e(TAG,result.toString());
+                Log.e(TAG, result.toString());
                 if (result.getRetCode() == I.MSG_REGISTER_USERNAME_EXISTS) {
                     mUsername.requestFocus();
                     mUsername.setError(getString(R.string.register_fail_exists));
@@ -181,8 +183,8 @@ public class RegisterActivity extends BaseActivity {
         }
     }
 
-    private void registerSuccess(){
-        Log.e(TAG,"registsuccess");
+    private void registerSuccess() {
+        Log.e(TAG, "registsuccess");
         if (!RegisterActivity.this.isFinishing())
             pd.dismiss();
         // save current user
@@ -192,7 +194,10 @@ public class RegisterActivity extends BaseActivity {
         MFGT.gotoLogin(this);
         MFGT.finish(this);
     }
-    private void dismiasDialog(){}
+
+    private void dismiasDialog() {
+    }
+
     private boolean checkInput() {
         username = mUsername.getText().toString().trim();
         usernick = mNick.getText().toString().trim();
@@ -213,26 +218,28 @@ public class RegisterActivity extends BaseActivity {
         } else if (!pwd.equals(confirm_pwd)) {
             Toast.makeText(this, getResources().getString(R.string.Two_input_password), Toast.LENGTH_SHORT).show();
             return false;
-        }else if (TextUtils.isEmpty(usernick)){
+        } else if (TextUtils.isEmpty(usernick)) {
             Toast.makeText(this, getResources().getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
 
-    private void unRegister(){
+    private void unRegister() {
         model.unregister(this, username, new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String result) {
-                Toast.makeText(RegisterActivity.this,"删除账号成功",Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "删除账号成功", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(String error) {
-                Toast.makeText(RegisterActivity.this,"删除账号失败",Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "删除账号失败", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+
 
     /*public void back(View view) {
         finish();

@@ -13,6 +13,8 @@ import com.hyphenate.chat.EMClient;
 import cn.ucai.superwechat.SigninActivity;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.utils.MFGT;
+
 import com.hyphenate.util.EasyUtils;
 
 /**
@@ -35,22 +37,7 @@ public class SplashActivity extends BaseActivity {
 		animation.setDuration(1500);
 		rootLayout.startAnimation(animation);
 
-		findViewById(R.id.login_btn).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-				overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
-				finish();
-			}
-		});
-		findViewById(R.id.signup_btn).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(SplashActivity.this, RegisterActivity.class));
-				overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
-				finish();
-			}
-		});
+
 	}
 
 	@Override
@@ -81,11 +68,14 @@ public class SplashActivity extends BaseActivity {
 						//enter main screen
 						startActivity(new Intent(SplashActivity.this, MainActivity.class));
 					}
-					finish();
+					MFGT.finish(SplashActivity.this);
+				}else {
+					MFGT.gotoSign(SplashActivity.this);
+					MFGT.finish(SplashActivity.this);
 				}
 			}
 		};
-		new Handler().post(runnable);
+		new Handler().postDelayed(runnable,1000);
 	}
 	
 	/**

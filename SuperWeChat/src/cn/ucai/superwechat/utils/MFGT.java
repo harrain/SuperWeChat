@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.SignActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 
@@ -25,6 +26,10 @@ public class MFGT {
 
     public static void gotoLogin(Activity activity){
         startActivity(activity, LoginActivity.class);
+    }
+
+    public static void gotoSign(Activity activity){
+        startActivity(activity, SignActivity.class);
     }
 
     public static void finish(Activity activity){
