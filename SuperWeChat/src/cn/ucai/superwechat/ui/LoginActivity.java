@@ -50,6 +50,8 @@ import cn.ucai.superwechat.data.net.IUserModel;
 import cn.ucai.superwechat.data.net.UserModel;
 import cn.ucai.superwechat.db.SuperWeChatDBManager;
 import cn.ucai.superwechat.model.User;
+import cn.ucai.superwechat.utils.L;
+import cn.ucai.superwechat.utils.MD5;
 import cn.ucai.superwechat.utils.MFGT;
 import cn.ucai.superwechat.utils.Result;
 import cn.ucai.superwechat.utils.ResultUtils;
@@ -254,9 +256,10 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
 
 	private void loginToAppServer(){
 		model = new UserModel();
-		model.login(this, currentUsername, currentPassword, new OnCompleteListener<String>() {
+		model.login(this, currentUsername, MD5.getMessageDigest(currentPassword),new OnCompleteListener<String>() {
 			@Override
 			public void onSuccess(String result) {
+				L.e(TAG,result);
 				handleJson(result);
 			}
 

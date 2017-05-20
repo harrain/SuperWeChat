@@ -106,14 +106,18 @@ public class RegisterActivity extends BaseActivity {
                     try {
                         // call method in SDK
                         EMClient.getInstance().createAccount(username, pwd);
-                        registToAppServer();
-
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                registToAppServer();
+                            }
+                        });
                     } catch (final HyphenateException e) {
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 if (!RegisterActivity.this.isFinishing())
                                     pd.dismiss();
-                                unRegister();
+
                                 int errorCode = e.getErrorCode();
                                 if (errorCode == EMError.NETWORK_ERROR) {
                                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.network_anomalies), Toast.LENGTH_SHORT).show();
