@@ -1,6 +1,7 @@
 package cn.ucai.superwechat.parse;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
@@ -188,6 +189,7 @@ public class UserProfileManager {
 			@Override
 			public void onSuccess(String s) {
 				if (s != null){
+					Log.e("UPM",s);
 					Result<User> result = ResultUtils.getResultFromJson(s,User.class);
 					if (result != null && result.isRetMsg()){
 						User user = result.getRetData();
