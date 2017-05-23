@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/black" >
+
+    <ImageView
+        android:id="@+id/iv_sign_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_sign_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dip"
+        android:text="We Chat"
+        android:textColor="#fff"
+        android:textSize="30sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dip"
+        android:layout_centerInParent="true"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:background="@color/green"
+            android:textColor="#fff"
+            android:textSize="20sp"
+             >
+        </Button>
+
+        <Button
+            android:id="@+id/signup_btn"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            android:layout_marginTop="10dp"
+            android:textColor="#111"
+            android:textSize="20sp"
+            android:background="@color/white"
+            >
+        </Button>
+    </LinearLayout>
+
+</RelativeLayout>
