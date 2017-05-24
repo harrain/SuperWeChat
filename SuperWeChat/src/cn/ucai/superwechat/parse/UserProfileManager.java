@@ -8,6 +8,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.User;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import cn.ucai.superwechat.data.net.UserModel;
 import cn.ucai.superwechat.utils.PreferenceManager;
 import cn.ucai.superwechat.utils.Result;
 import cn.ucai.superwechat.utils.ResultUtils;
+
 
 public class UserProfileManager {
 
@@ -124,6 +126,7 @@ public class UserProfileManager {
 		isSyncingContactInfosWithServer = false;
 		currentUser = null;
 		currentAppUser = null;
+
 		PreferenceManager.getInstance().removeCurrentUserInfo();
 	}
 
@@ -138,6 +141,7 @@ public class UserProfileManager {
 		return currentUser;
 	}
 
+
 	public synchronized User getCurrentAppUserInfo() {
 		if (currentAppUser == null) {
 			String username = EMClient.getInstance().getCurrentUser();
@@ -148,6 +152,7 @@ public class UserProfileManager {
 		}
 		return currentAppUser;
 	}
+
 
 	public boolean updateCurrentUserNickName(final String nickname) {
 		boolean isSuccess = ParseManager.getInstance().updateParseNickName(nickname);
@@ -184,6 +189,7 @@ public class UserProfileManager {
 
 	}
 
+
 	public void asyncGetCurrentAppUserInfo(){
 		model.loadUserInfo(appContext, EMClient.getInstance().getCurrentUser(), new OnCompleteListener<String>() {
 			@Override
@@ -208,6 +214,7 @@ public class UserProfileManager {
 		});
 	}
 
+
 	public void asyncGetUserInfo(final String username,final EMValueCallBack<EaseUser> callback){
 		ParseManager.getInstance().asyncGetUserInfo(username, callback);
 	}
@@ -221,6 +228,7 @@ public class UserProfileManager {
 		PreferenceManager.getInstance().setCurrentUserAvatar(avatar);
 	}
 
+
 	private void setCurrentAppUserNick(String nickname) {
 		getCurrentAppUserInfo().setMUserNick(nickname);
 		PreferenceManager.getInstance().setCurrentUserNick(nickname);
@@ -230,6 +238,7 @@ public class UserProfileManager {
 		getCurrentAppUserInfo().setAvatar(avatar);
 		PreferenceManager.getInstance().setCurrentUserAvatar(avatar);
 	}
+
 
 	private String getCurrentUserNick() {
 		return PreferenceManager.getInstance().getCurrentUserNick();

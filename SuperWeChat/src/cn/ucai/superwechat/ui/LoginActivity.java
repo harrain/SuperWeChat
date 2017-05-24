@@ -22,12 +22,14 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
@@ -49,6 +51,7 @@ import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.data.net.IUserModel;
 import cn.ucai.superwechat.db.SuperWeChatDBManager;
 import cn.ucai.superwechat.utils.MFGT;
+
 
 /**
  * Login screen
@@ -251,7 +254,28 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
         SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentAppUserInfo();
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
     /*private void loginToAppServer() {
+=======
+        SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
+    }
+
+    private void loginToAppServer() {
+>>>>>>> origin/master
         model = new UserModel();
         model.login(this, currentUsername, MD5.getMessageDigest(currentPassword), new OnCompleteListener<String>() {
             @Override
@@ -290,7 +314,9 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
         logonForSet();
         MFGT.gotoMain(this);
         MFGT.finish(this);
+<<<<<<< HEAD
     }*/
+
 
     /**
      * register
@@ -309,18 +335,5 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
         }
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
-    }
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
 }

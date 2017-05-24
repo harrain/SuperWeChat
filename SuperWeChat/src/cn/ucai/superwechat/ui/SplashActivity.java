@@ -3,6 +3,7 @@ package cn.ucai.superwechat.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
 import android.view.animation.AlphaAnimation;
 import android.widget.RelativeLayout;
 
@@ -12,6 +13,7 @@ import com.hyphenate.util.EasyUtils;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.utils.MFGT;
+
 
 /**
  * 开屏页
@@ -23,8 +25,10 @@ public class SplashActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle arg0) {
+
 		super.onCreate(arg0);
 		setContentView(R.layout.em_activity_splash);
+
 
 		RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.splash_root);
 
