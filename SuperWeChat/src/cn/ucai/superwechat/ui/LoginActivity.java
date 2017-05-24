@@ -252,6 +252,9 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
         // get user's info (this should be get from App's server or 3rd party service)
         //从第三方或者自己的服务器获取用户信息
         SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentAppUserInfo();
+
+        MFGT.gotoMain(this);
+        MFGT.finish(this);
     }
 
     @Override
@@ -314,7 +317,6 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
         logonForSet();
         MFGT.gotoMain(this);
         MFGT.finish(this);
-<<<<<<< HEAD
     }*/
 
 
