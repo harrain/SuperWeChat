@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -32,8 +31,15 @@ import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.SuperWeChatModel;
 import cn.ucai.superwechat.utils.MFGT;
 import cn.ucai.superwechat.utils.PreferenceManager;
-
-public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
+/**
+ * 包名：
+ * 类名：
+ * 类功能：
+ * 创建者：
+ * 创建日期：
+ * 有个键盘自动弹出的问题，不知道在哪里启动的
+ */
+public class SettingsActivity extends BaseActivity implements View.OnClickListener {
 
     /**
      * new message notification
@@ -255,7 +261,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             }
         });
     }
-
 
     @Override
     public void onClick(View v) {

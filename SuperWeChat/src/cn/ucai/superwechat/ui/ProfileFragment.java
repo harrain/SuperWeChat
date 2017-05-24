@@ -1,7 +1,6 @@
 package cn.ucai.superwechat.ui;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.easemob.redpacketui.utils.RPRedPacketUtil;
-import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.ui.EaseBaseFragment;
 
@@ -76,8 +74,7 @@ public class ProfileFragment extends EaseBaseFragment {
         switch (view.getId()) {
             case R.id.layout_profile_view:
                 MFGT.gotoProfile(getActivity());
-                startActivity(new Intent(getActivity(), UserProfileActivity.class).putExtra("setting", true)
-                        .putExtra("username", EMClient.getInstance().getCurrentUser()));
+
                 break;
             case R.id.tv_profile_money:
                 //red packet code : 进入零钱或红包记录页面

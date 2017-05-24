@@ -10,8 +10,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.easemob.redpacketsdk.constant.RPConstant;
 import com.easemob.redpacket.utils.RedPacketUtil;
+import com.easemob.redpacketsdk.constant.RPConstant;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMContactListener;
@@ -28,20 +28,6 @@ import com.hyphenate.chat.EMMessage.Status;
 import com.hyphenate.chat.EMMessage.Type;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMTextMessageBody;
-
-import cn.ucai.superwechat.db.SuperWeChatDBManager;
-import cn.ucai.superwechat.db.InviteMessgeDao;
-import cn.ucai.superwechat.db.UserDao;
-import cn.ucai.superwechat.domain.EmojiconExampleGroupData;
-import cn.ucai.superwechat.domain.InviteMessage;
-import cn.ucai.superwechat.domain.RobotUser;
-import cn.ucai.superwechat.parse.UserProfileManager;
-import cn.ucai.superwechat.receiver.CallReceiver;
-import cn.ucai.superwechat.ui.ChatActivity;
-import cn.ucai.superwechat.ui.MainActivity;
-import cn.ucai.superwechat.ui.VideoCallActivity;
-import cn.ucai.superwechat.ui.VoiceCallActivity;
-import cn.ucai.superwechat.utils.PreferenceManager;
 import com.hyphenate.easeui.controller.EaseUI;
 import com.hyphenate.easeui.controller.EaseUI.EaseEmojiconInfoProvider;
 import com.hyphenate.easeui.controller.EaseUI.EaseSettingsProvider;
@@ -49,6 +35,7 @@ import com.hyphenate.easeui.controller.EaseUI.EaseUserProfileProvider;
 import com.hyphenate.easeui.domain.EaseEmojicon;
 import com.hyphenate.easeui.domain.EaseEmojiconGroupEntity;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.model.EaseAtMessageHelper;
 import com.hyphenate.easeui.model.EaseNotifier;
 import com.hyphenate.easeui.model.EaseNotifier.EaseNotificationInfoProvider;
@@ -62,6 +49,20 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import cn.ucai.superwechat.db.InviteMessgeDao;
+import cn.ucai.superwechat.db.SuperWeChatDBManager;
+import cn.ucai.superwechat.db.UserDao;
+import cn.ucai.superwechat.domain.EmojiconExampleGroupData;
+import cn.ucai.superwechat.domain.InviteMessage;
+import cn.ucai.superwechat.domain.RobotUser;
+import cn.ucai.superwechat.parse.UserProfileManager;
+import cn.ucai.superwechat.receiver.CallReceiver;
+import cn.ucai.superwechat.ui.ChatActivity;
+import cn.ucai.superwechat.ui.MainActivity;
+import cn.ucai.superwechat.ui.VideoCallActivity;
+import cn.ucai.superwechat.ui.VoiceCallActivity;
+import cn.ucai.superwechat.utils.PreferenceManager;
 
 public class SuperWeChatHelper {
     /**
@@ -85,6 +86,8 @@ public class SuperWeChatHelper {
     protected EMMessageListener messageListener = null;
 
 	private Map<String, EaseUser> contactList;
+
+    private Map<String, User> contactAppList;
 
 	private Map<String, RobotUser> robotList;
 
@@ -272,6 +275,11 @@ public class SuperWeChatHelper {
             @Override
             public EaseUser getUser(String username) {
                 return getUserInfo(username);
+            }
+
+            @Override
+            public User getAppUser(String username) {
+                return getAppUserInfo(username);
             }
         });
 
@@ -837,6 +845,25 @@ public class SuperWeChatHelper {
         }
         return user;
 	}
+
+    private User getAppUserInfo(String username){
+        // To get instance of EaseUser, here we get it from the user list in memory
+        // You'd better cache it if you get it from your server
+        User user = null;
+        if(username.equals(EMClient.getInstance().getCurrentUser()))
+            return getUserProfileManager().getCurrentAppUserInfo();
+        /*user = getContactList().get(username);
+        if(user == null && getRobotList() != null){
+            user = getRobotList().get(username);
+        }
+
+        // if user is not in your contacts, set inital letter for him/her
+        if(user == null){
+            user = new User(username);
+            EaseCommonUtils.setUserInitialLetter(user);
+        }*/
+        return user;
+    }
 	
 	 /**
      * Global listener

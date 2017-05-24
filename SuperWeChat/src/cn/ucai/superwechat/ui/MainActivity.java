@@ -342,7 +342,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
 
     @Override
     public void onCheckedChange(int checkedPosition, boolean byUser) {
-        mLayoutViewpage.setCurrentItem(checkedPosition,true);
+        mLayoutViewpage.setCurrentItem(checkedPosition,false);
     }
 
     @Override
