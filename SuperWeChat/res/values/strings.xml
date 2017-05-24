@@ -123,4 +123,7 @@
     <string name="login_unkown_user">用户名不存在</string>
     <string name="login_password_error">密码错误</string>
     <string name="title_activity_sign">SignActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

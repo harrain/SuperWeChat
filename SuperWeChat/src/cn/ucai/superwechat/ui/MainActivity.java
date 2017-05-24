@@ -132,14 +132,14 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         conversationListFragment = new ConversationListFragment();
         contactListFragment = new ContactListFragment();
         discoverFragment = new DiscoverFragment();
-        SettingsFragment settingFragment = new SettingsFragment();
-        fragments = new Fragment[]{conversationListFragment, contactListFragment, settingFragment};
+        ProfileFragment profileFragment = new ProfileFragment();
+        fragments = new Fragment[]{conversationListFragment, contactListFragment, discoverFragment,profileFragment};
 
         adapter = new MainTabAdpter(getSupportFragmentManager());
         adapter.addFragment(conversationListFragment,getString(R.string.app_name));
         adapter.addFragment(contactListFragment,getString(R.string.contacts));
         adapter.addFragment(discoverFragment,getString(R.string.discover));
-        adapter.addFragment(settingFragment,getString(R.string.me));
+        adapter.addFragment(profileFragment,getString(R.string.me));
         mLayoutViewpage.setAdapter(adapter);
         mLayoutTabhost.setChecked(0);//选中第一个
         mLayoutViewpage.setOnPageChangeListener(this);
