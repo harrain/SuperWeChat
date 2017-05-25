@@ -2,13 +2,14 @@ package cn.ucai.superwechat.ui;
 
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
@@ -25,7 +26,11 @@ import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +42,7 @@ import cn.ucai.superwechat.data.OnCompleteListener;
 import cn.ucai.superwechat.data.net.IUserModel;
 import cn.ucai.superwechat.data.net.UserModel;
 import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.MFGT;
 import cn.ucai.superwechat.utils.Result;
 import cn.ucai.superwechat.utils.ResultUtils;
@@ -57,6 +63,7 @@ public class UserProfileActivity extends BaseActivity {
     private ProgressDialog dialog;
     private User user;
     IUserModel model;
+    private String avatarName;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -241,9 +248,11 @@ public class UserProfileActivity extends BaseActivity {
         Bundle extras = picdata.getExtras();
         if (extras != null) {
             Bitmap photo = extras.getParcelable("data");
-            Drawable drawable = new BitmapDrawable(getResources(), photo);
+            /*Drawable drawable = new BitmapDrawable(getResources(), photo);
             mIvUserinfoAvatar.setImageDrawable(drawable);
-            uploadUserAvatar(Bitmap2Bytes(photo));
+            uploadUserAvatar(Bitmap2Bytes(photo));*/
+            SuperWeChatHelper.getInstance().getUserProfileManager()
+                    .uploadAppUserAvatar(saveBitmapFile(photo));
         }
 
     }
@@ -311,6 +320,71 @@ public class UserProfileActivity extends BaseActivity {
                             }
                         }).setNegativeButton(R.string.dl_cancel, null).show();
                 break;
+        }
+    }
+
+    class UpdateAvatarBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            uploadAvatar(intent.getBooleanExtra(I.RESULT_UPDATE_AVATAR,false));
+        }
+    }
+
+    private void uploadAvatar(boolean isSuccess) {
+        if (isSuccess){
+            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatephoto_success),
+                    Toast.LENGTH_SHORT).show();
+            EaseUserUtils.setAppUserAvatar(UserProfileActivity.this,user.getMUserName(),mIvUserinfoAvatar);
+        }else{
+            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatephoto_fail),
+                    Toast.LENGTH_SHORT).show();
+        }
+        dismiss();
+    }
+
+    private String getAvatarName() {
+        avatarName = user.getMUserName()+ System.currentTimeMillis();
+        return avatarName;
+    }
+
+    /**
+     * 返回头像保存在sd卡的位置:
+     * Android/data/cn.ucai.superwechat/files/pictures/user_avatar
+     * @param context
+     * @param path
+     * @return
+     */
+    public static String getAvatarPath(Context context, String path){
+        File dir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File folder = new File(dir,path);
+        if(!folder.exists()){
+            folder.mkdir();
+        }
+        return folder.getAbsolutePath();
+    }
+
+    private File saveBitmapFile(Bitmap bitmap) {
+        if (bitmap != null) {
+            String imagePath = getAvatarPath(this,I.AVATAR_TYPE)+"/"+getAvatarName()+".jpg";
+            File file = new File(imagePath);//将要保存图片的路径
+            L.e("file path="+file.getAbsolutePath());
+            try {
+                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                bos.flush();
+                bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return file;
+        }
+        return null;
+    }
+
+    private void dismiss(){
+        if (dialog!=null && dialog.isShowing()){
+            dialog.dismiss();
         }
     }
 }
