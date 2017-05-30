@@ -19,16 +19,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.controller.EaseUI;
+import com.hyphenate.easeui.widget.EaseTitleBar;
 
 @SuppressLint({"NewApi", "Registered"})
 public class EaseBaseActivity extends AppCompatActivity {
-
+    protected EaseTitleBar titleBar;
     protected InputMethodManager inputMethodManager;
 
     @Override
@@ -44,10 +45,37 @@ public class EaseBaseActivity extends AppCompatActivity {
                 return;
             }
         }
-        
+        titleBar = (EaseTitleBar) findViewById(R.id.title_bar);
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
-    
+
+    public void showTitleBar(){
+        if(titleBar != null){
+            titleBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void hideTitleBar(){
+        if(titleBar != null){
+            titleBar.setVisibility(View.GONE);
+        }
+    }
+
+    public void showLeftBack(){
+        if (titleBar!=null){
+            if (titleBar.getLeftImage()){
+                titleBar.getLeftLayout().setEnabled(true);
+                titleBar.getLeftLayout().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                });
+            }else{
+                titleBar.getLeftLayout().setEnabled(false);
+            }
+        }
+    }
 
     @Override
     protected void onResume() {
@@ -58,9 +86,12 @@ public class EaseBaseActivity extends AppCompatActivity {
     
     protected void hideSoftKeyboard() {
         if (getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
-            if (getCurrentFocus() != null)
+            if (getCurrentFocus() != null) {
                 inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
+            } else {
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            }
         }
     }
 

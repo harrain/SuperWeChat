@@ -17,71 +17,123 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.hyphenate.chat.EMClient;
-import cn.ucai.superwechat.SuperWeChatHelper;
-import cn.ucai.superwechat.R;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
+
+import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.data.OnCompleteListener;
+import cn.ucai.superwechat.data.net.IUserModel;
+import cn.ucai.superwechat.data.net.UserModel;
+import cn.ucai.superwechat.utils.L;
+import cn.ucai.superwechat.utils.MFGT;
+import cn.ucai.superwechat.utils.Result;
+import cn.ucai.superwechat.utils.ResultUtils;
 
 public class AddContactActivity extends BaseActivity{
 	private EditText editText;
 	private RelativeLayout searchedUserLayout;
-	private TextView nameText;
-	private Button searchBtn;
+	private static String TAG = AddContactActivity.class.getSimpleName();
+	IUserModel model;
 	private String toAddUsername;
 	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.em_activity_add_contact);
+		super.onCreate(savedInstanceState);
 		TextView mTextView = (TextView) findViewById(R.id.add_list_friends);
 		
 		editText = (EditText) findViewById(R.id.edit_note);
-		String strAdd = getResources().getString(R.string.add_friend);
-		mTextView.setText(strAdd);
+
 		String strUserName = getResources().getString(R.string.user_name);
 		editText.setHint(strUserName);
 		searchedUserLayout = (RelativeLayout) findViewById(R.id.ll_user);
-		nameText = (TextView) findViewById(R.id.name);
-		searchBtn = (Button) findViewById(R.id.search);
+		initView();
+		model = new UserModel();
 	}
-	
-	
-	/**
-	 * search contact
-	 * @param v
-	 */
-	public void searchContact(View v) {
-		final String name = editText.getText().toString();
-		String saveText = searchBtn.getText().toString();
-		
-		if (getString(R.string.button_search).equals(saveText)) {
-			toAddUsername = name;
-			if(TextUtils.isEmpty(name)) {
-				new EaseAlertDialog(this, R.string.Please_enter_a_username).show();
-				return;
+
+	private void initView(){
+		titleBar.getRightLayout().setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				searchContact();
+
 			}
-			
-			// TODO you can search the user from your app server here.
-			
-			//show the userame and add button if user exist
-			searchedUserLayout.setVisibility(View.VISIBLE);
-			nameText.setText(toAddUsername);
-			
-		} 
-	}	
-	
-	/**
-	 *  add contact
-	 * @param view
-	 */
-	public void addContact(View view){
+		});
+		titleBar.getLeftLayout().setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MFGT.finish(AddContactActivity.this);
+			}
+		});
+	}
+
+	private void initDialog(){
+		progressDialog = new ProgressDialog(AddContactActivity.this);
+		progressDialog.setMessage(getString(R.string.searching));
+		progressDialog.show();
+	}
+
+	private void dismissDialog(){
+		if (progressDialog!=null && progressDialog.isShowing()){
+			progressDialog.dismiss();
+		}
+	}
+
+	public void searchContact() {
+		initDialog();
+		final String name = editText.getText().toString();
+
+		toAddUsername = name;
+		if(TextUtils.isEmpty(name)) {
+			new EaseAlertDialog(this, R.string.Please_enter_a_username).show();
+			return;
+		}
+
+		searchContactFromAppServer();
+	}
+
+	private void searchContactFromAppServer() {
+		model.loadUserInfo(AddContactActivity.this, toAddUsername,
+				new OnCompleteListener<String>() {
+					@Override
+					public void onSuccess(String s) {
+						boolean isSuccess = false;
+						User user = null;
+						if (s!=null){
+							Result<User> result = ResultUtils.getResultFromJson(s, User.class);
+							if (result!=null && result.isRetMsg()){
+								user = result.getRetData();
+								L.e(TAG,"searchContactFromAppServer,user="+user);
+								if (user!=null){
+									isSuccess = true;
+								}
+							}
+						}
+						showSearchResult(isSuccess,user);
+
+					}
+
+					@Override
+					public void onError(String error) {
+						showSearchResult(false,null);
+					}
+				});
+	}
+
+	private void showSearchResult(boolean isSuccess,User user) {
+		dismissDialog();
+		searchedUserLayout.setVisibility(isSuccess?View.GONE:View.VISIBLE);
+		if (isSuccess && user != null){
+			MFGT.gotoProfile(AddContactActivity.this,user);
+		}
+	}
+
+	/*public void addContact(View view){
 		if(EMClient.getInstance().getCurrentUser().equals(nameText.getText().toString())){
 			new EaseAlertDialog(this, R.string.not_add_myself).show();
 			return;
@@ -128,7 +180,7 @@ public class AddContactActivity extends BaseActivity{
 				}
 			}
 		}).start();
-	}
+	}*/
 	
 	public void back(View v) {
 		finish();

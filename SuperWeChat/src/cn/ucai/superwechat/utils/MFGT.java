@@ -4,10 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.hyphenate.easeui.domain.User;
+
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SignActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.MainActivity;
+import cn.ucai.superwechat.ui.ProfileActivity;
 import cn.ucai.superwechat.ui.SettingsActivity;
 import cn.ucai.superwechat.ui.UserProfileActivity;
 
@@ -50,6 +54,11 @@ public class MFGT {
 
     public static void gotoProfile(Activity activity) {
         startActivity(activity, UserProfileActivity.class);
+    }
+
+    public static void gotoProfile(Activity activity, User user) {
+        startActivity(activity,new Intent(activity, ProfileActivity.class)
+                .putExtra(I.User.TABLE_NAME,user));
     }
 
     public static void logout(Activity activity) {

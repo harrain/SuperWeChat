@@ -526,9 +526,12 @@
             android:name=".SignActivity"
             android:label="@string/title_activity_sign"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ui.SettingsActivity"
+        <activity
+            android:name=".ui.SettingsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".ui.ProfileActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

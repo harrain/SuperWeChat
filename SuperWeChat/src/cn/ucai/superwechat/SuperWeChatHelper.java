@@ -87,7 +87,7 @@ public class SuperWeChatHelper {
 
 	private Map<String, EaseUser> contactList;
 
-    private Map<String, User> contactAppList;
+    private Map<String, User> appContactList;
 
 	private Map<String, RobotUser> robotList;
 
@@ -1007,6 +1007,17 @@ public class SuperWeChatHelper {
 		
 		contactList = aContactList;
 	}
+
+    public void setAppContactList(Map<String, User> aContactList) {
+        if(aContactList == null){
+            if (appContactList != null) {
+                appContactList.clear();
+            }
+            return;
+        }
+
+        appContactList = aContactList;
+    }
 	
 	/**
      * save single contact 
@@ -1015,7 +1026,13 @@ public class SuperWeChatHelper {
     	contactList.put(user.getUsername(), user);
     	demoModel.saveContact(user);
     }
-    
+
+    public void saveAppContact(User user){
+        appContactList.put(user.getMUserName(), user);
+        demoModel.saveAppContact(user);
+    }
+
+
     /**
      * get contact list
      *
@@ -1032,6 +1049,19 @@ public class SuperWeChatHelper {
         }
         
         return contactList;
+    }
+
+    public Map<String, User> getAppContactList() {
+        if (isLoggedIn() && appContactList == null) {
+            appContactList = demoModel.getAppContactList();
+        }
+
+        // return a empty non-null object to avoid app crash
+        if(appContactList == null){
+            return new Hashtable<String, User>();
+        }
+
+        return appContactList;
     }
     
     /**
