@@ -9,7 +9,7 @@
 
     <com.hyphenate.easeui.widget.EaseTitleBar
         android:id="@+id/title_bar"
-        app:titleBarLeftImage="@drawable/icon_back"
+        app:titleBarLeftImage="@drawable/em_mm_title_back"
         app:titleBarTitle="@string/add_friend"
         app:titleBarRightText="@string/search"
         android:layout_width="match_parent"

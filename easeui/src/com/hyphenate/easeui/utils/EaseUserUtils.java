@@ -60,7 +60,7 @@ public class EaseUserUtils {
 
     public static void setAppUserAvatar(Context context, String username, ImageView imageView){
         User user = getAppUserInfo(username);
-        if(user != null && user.getAvatar() != null){
+        /*if(user != null && user.getAvatar() != null){
             try {
                 int avatarResId = Integer.parseInt(user.getAvatar());
                 Glide.with(context).load(avatarResId).into(imageView);
@@ -68,6 +68,15 @@ public class EaseUserUtils {
                 //use default avatar
                 Glide.with(context).load(user.getAvatar()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ease_default_avatar).into(imageView);
             }
+        }else{
+            Glide.with(context).load(R.drawable.ease_default_avatar).into(imageView);
+        }*/
+        setAppUserAvatar(context,user,imageView);
+    }
+
+    public static void setAppUserAvatar(Context context, User user, ImageView imageView){
+        if(user != null && user.getAvatar() != null){
+            setAvatar(context,user.getAvatar(),imageView);
         }else{
             Glide.with(context).load(R.drawable.ease_default_avatar).into(imageView);
         }
@@ -90,11 +99,41 @@ public class EaseUserUtils {
     public static void setAppUserNick(String username,TextView textView){
         if(textView != null){
             User user = getAppUserInfo(username);
-            if(user != null && user.getMUserNick() != null){
+            /*if(user != null && user.getMUserNick() != null){
                 textView.setText(user.getMUserNick());
             }else{
                 textView.setText(username);
+            }*/
+            setAppUserNick(user,textView);
+        }
+    }
+
+    public static void setAppUserNick(User user,TextView textView){
+        if(user != null && user.getMUserNick() != null){
+            textView.setText(user.getMUserNick());
+        }else if (user!=null){
+            textView.setText(user.getMUserName());
+        }
+    }
+
+    public static void setNick(String nickname, TextView textView){
+        if (textView!=null){
+            textView.setText(nickname);
+        }
+    }
+
+    public static void setAvatar(Context context,String avatarPath,ImageView imageView){
+        if (avatarPath!=null){
+            try {
+                int avatarResId = Integer.parseInt(avatarPath);
+                Glide.with(context).load(avatarResId).into(imageView);
+            } catch (Exception e) {
+                //use default avatar
+                Glide.with(context).load(avatarPath).diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .placeholder(R.drawable.ease_default_avatar).into(imageView);
             }
+        }else{
+            Glide.with(context).load(R.drawable.ease_default_avatar).into(imageView);
         }
     }
     

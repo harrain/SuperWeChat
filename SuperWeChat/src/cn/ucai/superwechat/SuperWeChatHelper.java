@@ -852,16 +852,13 @@ public class SuperWeChatHelper {
         User user = null;
         if(username.equals(EMClient.getInstance().getCurrentUser()))
             return getUserProfileManager().getCurrentAppUserInfo();
-        /*user = getContactList().get(username);
-        if(user == null && getRobotList() != null){
-            user = getRobotList().get(username);
-        }
+        user = getAppContactList().get(username);
 
         // if user is not in your contacts, set inital letter for him/her
         if(user == null){
             user = new User(username);
-            EaseCommonUtils.setUserInitialLetter(user);
-        }*/
+            EaseCommonUtils.setAppUserInitialLetter(user);
+        }
         return user;
     }
 	
@@ -1108,7 +1105,17 @@ public class SuperWeChatHelper {
          demoModel.saveContactList(mList);
     }
 
-	public UserProfileManager getUserProfileManager() {
+    public void updateAppContactList(List<User> contactInfoList) {
+        for (User u : contactInfoList) {
+            appContactList.put(u.getMUserName(), u);
+        }
+        ArrayList<User> mList = new ArrayList<User>();
+        mList.addAll(appContactList.values());
+        demoModel.saveAppContactList(mList);
+    }
+
+
+    public UserProfileManager getUserProfileManager() {
 		if (userProManager == null) {
 			userProManager = new UserProfileManager();
 		}
