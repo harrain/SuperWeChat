@@ -23,6 +23,8 @@ public class EaseTitleBar extends RelativeLayout{
     protected ImageView rightImage;
     protected TextView titleView;
     protected RelativeLayout titleLayout;
+    protected TextView leftText;
+    protected TextView rightText;
 
     public EaseTitleBar(Context context, AttributeSet attrs, int defStyle) {
         this(context, attrs);
@@ -46,6 +48,8 @@ public class EaseTitleBar extends RelativeLayout{
         rightImage = (ImageView) findViewById(R.id.right_image);
         titleView = (TextView) findViewById(R.id.title);
         titleLayout = (RelativeLayout) findViewById(R.id.root);
+        leftText = (TextView) findViewById(R.id.left_text);
+        rightText = (TextView) findViewById(R.id.right_text);
         
         parseStyle(context, attrs);
     }
@@ -55,6 +59,12 @@ public class EaseTitleBar extends RelativeLayout{
             TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EaseTitleBar);
             String title = ta.getString(R.styleable.EaseTitleBar_titleBarTitle);
             titleView.setText(title);
+
+            String leftString = ta.getString(R.styleable.EaseTitleBar_titleBarLeftText);
+            leftText.setText(leftString);
+
+            String rightString = ta.getString(R.styleable.EaseTitleBar_titleBarRightText);
+            rightText.setText(rightString);
             
             Drawable leftDrawable = ta.getDrawable(R.styleable.EaseTitleBar_titleBarLeftImage);
             if (null != leftDrawable) {
@@ -112,5 +122,21 @@ public class EaseTitleBar extends RelativeLayout{
     
     public RelativeLayout getRightLayout(){
         return rightLayout;
+    }
+
+    public void setLeftText(String text){
+        leftText.setText(text);
+    }
+
+    public void setLeftText(int text){
+        leftText.setText(text);
+    }
+
+    public void setRightText(String text){
+        rightText.setText(text);
+    }
+
+    public void setRightText(int text){
+        rightText.setText(text);
     }
 }
