@@ -50,6 +50,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import cn.ucai.superwechat.data.OnCompleteListener;
+import cn.ucai.superwechat.data.net.IUserModel;
+import cn.ucai.superwechat.data.net.UserModel;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.SuperWeChatDBManager;
 import cn.ucai.superwechat.db.UserDao;
@@ -62,7 +65,10 @@ import cn.ucai.superwechat.ui.ChatActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.VideoCallActivity;
 import cn.ucai.superwechat.ui.VoiceCallActivity;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.PreferenceManager;
+import cn.ucai.superwechat.utils.Result;
+import cn.ucai.superwechat.utils.ResultUtils;
 
 public class SuperWeChatHelper {
     /**
@@ -96,11 +102,13 @@ public class SuperWeChatHelper {
 	private static SuperWeChatHelper instance = null;
 	
 	private SuperWeChatModel demoModel = null;
-	
+
+    private IUserModel model = null;
 	/**
      * sync groups status listener
      */
     private List<DataSyncListener> syncGroupsListeners;
+
     /**
      * sync contacts status listener
      */
@@ -151,6 +159,7 @@ public class SuperWeChatHelper {
 	 */
 	public void init(Context context) {
 	    demoModel = new SuperWeChatModel(context);
+        model = new UserModel();
 	    EMOptions options = initChatOptions();
 	    //use default options if options is null
 		if (EaseUI.getInstance().init(context, options)) {
@@ -729,8 +738,9 @@ public class SuperWeChatHelper {
 
         @Override
         public void onContactAdded(String username) {
+            L.e(TAG,"MyContactListener,onContactAdded,username="+username);
             // save contact
-            Map<String, EaseUser> localUsers = getContactList();
+            /*Map<String, EaseUser> localUsers = getContactList();
             Map<String, EaseUser> toAddUsers = new HashMap<String, EaseUser>();
             EaseUser user = new EaseUser(username);
 
@@ -740,11 +750,13 @@ public class SuperWeChatHelper {
             toAddUsers.put(username, user);
             localUsers.putAll(toAddUsers);
 
-            broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+            broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));*/
+            contactAddToApp(username);
         }
 
         @Override
         public void onContactDeleted(String username) {
+            L.e(TAG,"MyContactListener,onContactDeleted,username="+username);
             Map<String, EaseUser> localUsers = SuperWeChatHelper.getInstance().getContactList();
             localUsers.remove(username);
             userDao.deleteContact(username);
@@ -757,6 +769,7 @@ public class SuperWeChatHelper {
 
         @Override
         public void onContactInvited(String username, String reason) {
+            L.e(TAG,"MyContactListener,onContactInvited,username="+username+",reason="+reason);
             List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
 
             for (InviteMessage inviteMessage : msgs) {
@@ -778,6 +791,7 @@ public class SuperWeChatHelper {
 
         @Override
         public void onFriendRequestAccepted(String username) {
+            L.e(TAG,"MyContactListener,onFriendRequestAccepted,username="+username);
             List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
             for (InviteMessage inviteMessage : msgs) {
                 if (inviteMessage.getFrom().equals(username)) {
@@ -796,20 +810,86 @@ public class SuperWeChatHelper {
 
         @Override
         public void onFriendRequestDeclined(String username) {
+            L.e(TAG,"MyContactListener,onFriendRequestDeclined,username="+username);
             // your request was refused
             Log.d(username, username + " refused to your request");
         }
+    }
+
+    private void contactAddToApp(String username) {
+        model.addContact(appContext, EMClient.getInstance().getCurrentUser(), username,
+                new OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        if (s!=null){
+                            Result<User> result = ResultUtils.getResultFromJson(s, User.class);
+                            if (result!=null && result.isRetMsg()){
+                                User user = result.getRetData();
+                                if (user!=null){
+                                    saveContact2DB(user);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                    }
+                });
+    }
+
+    private void saveContact2DB(User user) {
+
+        // save contact
+        Map<String, User> localUsers = getAppContactList();
+        Map<String, User> toAddUsers = new HashMap<String, User>();
+
+        if (!localUsers.containsKey(user.getMUserName())) {
+            userDao.saveAppContact(user);
+        }
+        toAddUsers.put(user.getMUserName(), user);
+        localUsers.putAll(toAddUsers);
+
+        broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
     }
     
     /**
      * save and notify invitation message
      * @param msg
      */
-    private void notifyNewInviteMessage(InviteMessage msg){
+    private void notifyNewInviteMessage(final InviteMessage msg){
+        L.e(TAG,"notifyNewInviteMessage,msg="+msg);
         if(inviteMessgeDao == null){
             inviteMessgeDao = new InviteMessgeDao(appContext);
         }
-        inviteMessgeDao.saveMessage(msg);
+        model.loadUserInfo(appContext, msg.getFrom(), new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                User user = new User(msg.getFrom());
+                msg.setNickname(user.getMUserNick());
+                msg.setAvatar(user.getAvatar());
+                if (s!=null){
+                    Result<User> result = ResultUtils.getResultFromJson(s, User.class);
+                    if (result!=null && result.isRetMsg()){
+                        user = result.getRetData();
+                        if (user!=null){
+                            msg.setNickname(user.getMUserNick());
+                            msg.setAvatar(user.getAvatar());
+                        }
+                    }
+                }
+                inviteMessgeDao.saveMessage(msg);
+            }
+
+            @Override
+            public void onError(String error) {
+                User user = new User(msg.getFrom());
+                msg.setNickname(user.getMUserNick());
+                msg.setAvatar(user.getAvatar());
+                inviteMessgeDao.saveMessage(msg);
+            }
+        });
         //increase the unread message count
         inviteMessgeDao.saveUnreadMessageCount(1);
         // notify there is new message
