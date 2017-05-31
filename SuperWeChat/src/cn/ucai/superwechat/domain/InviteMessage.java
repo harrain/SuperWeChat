@@ -22,7 +22,9 @@ public class InviteMessage {
 	private String groupId;
 	private String groupName;
 	private String groupInviter;
-	
+
+	private String nickname;
+	private String avatar;
 
 	private int id;
 	
@@ -59,8 +61,22 @@ public class InviteMessage {
 		this.status = status;
 	}
 
-	
-	
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
 	public int getId() {
 		return id;
 	}

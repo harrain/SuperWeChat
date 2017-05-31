@@ -14,15 +14,14 @@
 package cn.ucai.superwechat.ui;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ListView;
+
+import java.util.List;
 
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.adapter.NewFriendsMsgAdapter;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.domain.InviteMessage;
-
-import java.util.List;
 
 /**
  * Application and notification
@@ -32,9 +31,9 @@ public class NewFriendsMsgActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.em_activity_new_friends_msg);
-
+		super.onCreate(savedInstanceState);
+		showLeftBack();
 		ListView listView = (ListView) findViewById(R.id.list);
 		InviteMessgeDao dao = new InviteMessgeDao(this);
 		List<InviteMessage> msgs = dao.getMessagesList();
@@ -45,7 +44,4 @@ public class NewFriendsMsgActivity extends BaseActivity {
 		
 	}
 
-	public void back(View view) {
-		finish();
-	}
 }

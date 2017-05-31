@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:apps="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.hyphenate.easeui.widget.EaseTitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        apps:titleBarLeftImage="@drawable/em_mm_title_back"
+        apps:titleBarTitle="@string/vif_msg"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:text="@string/addcontact_send_msg_title"/>
+    <EditText
+        android:background="@drawable/edittext_login"
+        android:id="@+id/etMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:paddingLeft="15dp"
+        android:textColor="@color/black"
+        android:singleLine="true"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btn_add_contact"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_bg_green"
+        android:paddingBottom="7dp"
+        android:paddingTop="7dp"
+        android:text="@string/send_msg"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+</LinearLayout>

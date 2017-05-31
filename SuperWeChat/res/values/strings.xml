@@ -118,6 +118,8 @@
         completions."
     </string>
     <string name="msg_1">测试吧哈哈</string>
+    <string name="vif_msg">验证申请</string>
+    <string name="send_msg">发送申请</string>
     <string name="register_fail_exists">用户名已存在</string>
     <string name="register_fail">注册失败</string>
     <string name="login_unkown_user">用户名不存在</string>

@@ -11,9 +11,11 @@ import com.hyphenate.easeui.utils.EaseUserUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.utils.MFGT;
 
 public class ProfileActivity extends BaseActivity {
 
@@ -60,6 +62,11 @@ public class ProfileActivity extends BaseActivity {
         mBtnAddContact.setVisibility(isContact? View.GONE:View.VISIBLE);
         mBtnSendMsg.setVisibility(isContact?View.VISIBLE:View.GONE);
         mBtnSendVideo.setVisibility(isContact?View.VISIBLE:View.GONE);
+    }
+
+    @OnClick(R.id.btn_add_contact)
+    public void sendAddContactMsg(){
+        MFGT.gotoSendMsg(ProfileActivity.this,user.getMUserName());
     }
 
 }

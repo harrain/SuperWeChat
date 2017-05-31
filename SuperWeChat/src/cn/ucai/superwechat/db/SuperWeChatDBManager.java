@@ -189,6 +189,8 @@ public class SuperWeChatDBManager {
             values.put(InviteMessgeDao.COLUMN_NAME_GROUP_Name, message.getGroupName());
             values.put(InviteMessgeDao.COLUMN_NAME_REASON, message.getReason());
             values.put(InviteMessgeDao.COLUMN_NAME_TIME, message.getTime());
+            values.put(InviteMessgeDao.COLUMN_NAME_NICK, message.getNickname());
+            values.put(InviteMessgeDao.COLUMN_NAME_AVATAR, message.getAvatar());
             values.put(InviteMessgeDao.COLUMN_NAME_STATUS, message.getStatus().ordinal());
             values.put(InviteMessgeDao.COLUMN_NAME_GROUPINVITER, message.getGroupInviter());
             db.insert(InviteMessgeDao.TABLE_NAME, null, values);
@@ -230,6 +232,8 @@ public class SuperWeChatDBManager {
                 String from = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_FROM));
                 String groupid = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_GROUP_ID));
                 String groupname = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_GROUP_Name));
+                String nickname = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_NICK));
+                String avatar = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_AVATAR));
                 String reason = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_REASON));
                 long time = cursor.getLong(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_TIME));
                 int status = cursor.getInt(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_STATUS));
@@ -240,6 +244,8 @@ public class SuperWeChatDBManager {
                 msg.setGroupId(groupid);
                 msg.setGroupName(groupname);
                 msg.setReason(reason);
+                msg.setNickname(nickname);
+                msg.setAvatar(avatar);
                 msg.setTime(time);
                 msg.setGroupInviter(groupInviter);
                 
