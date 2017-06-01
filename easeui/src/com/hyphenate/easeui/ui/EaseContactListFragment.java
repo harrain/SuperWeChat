@@ -110,7 +110,7 @@ public class EaseContactListFragment extends EaseBaseFragment {
     
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    EaseUser user = (EaseUser)listView.getItemAtPosition(position);
+                    User user = (User)listView.getItemAtPosition(position);
                     listItemClickListener.onListItemClicked(user);
                 }
             });
@@ -323,7 +323,7 @@ public class EaseContactListFragment extends EaseBaseFragment {
          * on click event for item in contact list 
          * @param user --the user of item
          */
-        void onListItemClicked(EaseUser user);
+        void onListItemClicked(User user);
     }
     
     /**

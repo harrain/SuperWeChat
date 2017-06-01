@@ -25,6 +25,8 @@ public interface IUserModel {
 
     void addContact(Context context,String username,String cname,OnCompleteListener<String> listener);
 
+    void deleteContact(Context context,String username,String cname,OnCompleteListener<String> listener);
+
     void uploadAvatar(Context context, String username, String avatarType, File file,
                       OnCompleteListener<String> listener);
     /*void loadCollectsCount(Context context, String username, OnCompleteListener<MessageBean> listener);
