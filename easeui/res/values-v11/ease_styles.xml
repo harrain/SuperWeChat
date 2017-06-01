@@ -5,7 +5,7 @@
         <item name="android:windowAnimationStyle">@style/AnimFade</item>
     </style>
 
-    <style name="horizontal_slide" parent="android:style/Theme.Holo.Light.NoActionBar">
+    <style name="horizontal_slide" parent="AppTheme">
         <item name="android:windowAnimationStyle">@style/AnimFade2</item>
     </style>
 
