@@ -36,6 +36,10 @@ public class MFGT {
         startActivity(activity, MainActivity.class);
     }
 
+    public static void gotoMain(Activity activity,boolean isReset){
+        startActivity(activity, new Intent(activity,MainActivity.class).putExtra("isReset",isReset));
+    }
+
     public static void gotoLogin(Activity activity){
         startActivity(activity, LoginActivity.class);
     }

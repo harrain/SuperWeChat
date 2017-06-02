@@ -582,6 +582,9 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        if (intent.getBooleanExtra("isReset",false)) {
+            mLayoutTabhost.setChecked(0);
+        }
         showExceptionDialogFromIntent(intent);
     }
 

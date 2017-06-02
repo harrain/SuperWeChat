@@ -220,6 +220,11 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
         }
         
     }
+
+    public void onBackPressed(){
+        super.onBackPressed();
+        MFGT.gotoMain(getActivity(),true);
+    }
     
     @Override
     public void onSetMessageAttributes(EMMessage message) {
@@ -254,11 +259,11 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     @Override
     public void onAvatarClick(String username) {
         //handling when user click avatar
-        //MFGT.gotoProfile(getActivity(),username);
-        Intent intent = new Intent(getActivity(), ProfileActivity.class);
+        MFGT.gotoProfile(getActivity(),username);
+        /*Intent intent = new Intent(getActivity(), ProfileActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(I.User.USER_NAME, username);
-        startActivity(intent);
+        startActivity(intent);自己写的*/
     }
     
     @Override
