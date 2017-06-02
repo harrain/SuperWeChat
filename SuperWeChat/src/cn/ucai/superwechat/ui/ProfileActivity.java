@@ -45,6 +45,8 @@ public class ProfileActivity extends BaseActivity {
         showLeftBack();
     }
 
+
+
     private void initData() {
         String username = getIntent().getStringExtra(I.User.USER_NAME);
         if (username != null){
