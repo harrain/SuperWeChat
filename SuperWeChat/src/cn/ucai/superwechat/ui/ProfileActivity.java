@@ -45,12 +45,19 @@ public class ProfileActivity extends BaseActivity {
         showLeftBack();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
+    }
 
     private void initData() {
         String username = getIntent().getStringExtra(I.User.USER_NAME);
         if (username != null){
             user = SuperWeChatHelper.getInstance().getAppContactList().get(username);
+            if (user == null) {
+                user = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentAppUserInfo();
+            }
         }
         if (user == null){
             user = (User) getIntent().getSerializableExtra(I.User.TABLE_NAME);
@@ -64,16 +71,20 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void showInfo() {
-        mTvUserinfoName.setText(user.getMUserName());
-        EaseUserUtils.setAppUserNick(user.getMUserNick(),mTvUserinfoNick);
-        EaseUserUtils.setAppUserAvatar(ProfileActivity.this,user.getAvatar(),mProfileImage);
-        showButton(SuperWeChatHelper.getInstance().getAppContactList().containsKey(user.getMUserName()));
+
+            mTvUserinfoName.setText(user.getMUserName());
+            EaseUserUtils.setAppUserNick(user.getMUserNick(), mTvUserinfoNick);
+            EaseUserUtils.setAppUserAvatar(ProfileActivity.this, user.getAvatar(), mProfileImage);
+            showButton(SuperWeChatHelper.getInstance().getAppContactList().containsKey(user.getMUserName()));
+
     }
 
     private void showButton(boolean isContact) {
-        mBtnAddContact.setVisibility(isContact? View.GONE:View.VISIBLE);
-        mBtnSendMsg.setVisibility(isContact?View.VISIBLE:View.GONE);
-        mBtnSendVideo.setVisibility(isContact?View.VISIBLE:View.GONE);
+        if (!user.getMUserName().equals(EMClient.getInstance().getCurrentUser())) {
+            mBtnAddContact.setVisibility(isContact ? View.GONE : View.VISIBLE);
+            mBtnSendMsg.setVisibility(isContact ? View.VISIBLE : View.GONE);
+            mBtnSendVideo.setVisibility(isContact ? View.VISIBLE : View.GONE);
+        }
     }
 
     @OnClick(R.id.btn_add_contact)

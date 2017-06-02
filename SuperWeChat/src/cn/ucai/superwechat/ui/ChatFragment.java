@@ -32,6 +32,7 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import cn.ucai.superwechat.Constant;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.domain.EmojiconExampleGroupData;
@@ -253,10 +254,11 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     @Override
     public void onAvatarClick(String username) {
         //handling when user click avatar
-        MFGT.gotoProfile(getActivity(),username);
-        /*Intent intent = new Intent(getActivity(), UserProfileActivity.class);
-        intent.putExtra("username", username);
-        startActivity(intent);*/
+        //MFGT.gotoProfile(getActivity(),username);
+        Intent intent = new Intent(getActivity(), ProfileActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(I.User.USER_NAME, username);
+        startActivity(intent);
     }
     
     @Override

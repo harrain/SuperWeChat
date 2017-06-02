@@ -2,6 +2,7 @@ package com.hyphenate.easeui.widget.chatrow;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.BaseAdapter;
@@ -277,6 +278,7 @@ public abstract class EaseChatRow extends LinearLayout {
                 public void onClick(View v) {
                     if (itemClickListener != null) {
                         if (message.direct() == Direct.SEND) {
+                            Log.e(TAG,"currentusersend");
                             itemClickListener.onUserAvatarClick(EMClient.getInstance().getCurrentUser());
                         } else {
                             itemClickListener.onUserAvatarClick(message.getFrom());
