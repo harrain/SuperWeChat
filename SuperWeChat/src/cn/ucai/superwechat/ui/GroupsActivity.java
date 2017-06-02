@@ -68,9 +68,9 @@ public class GroupsActivity extends BaseActivity {
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.em_fragment_groups);
-
+		super.onCreate(savedInstanceState);
+		showLeftBack();
 		instance = this;
 		inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 		grouplist = EMClient.getInstance().groupManager().getAllGroups();

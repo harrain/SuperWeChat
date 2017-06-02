@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager.EMGroupOptions;
 import com.hyphenate.chat.EMGroupManager.EMGroupStyle;
 import cn.ucai.superwechat.R;
@@ -42,8 +43,9 @@ public class NewGroupActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.em_activity_new_group);
+		super.onCreate(savedInstanceState);
+		showLeftBack();
 		groupNameEditText = (EditText) findViewById(R.id.edit_group_name);
 		introductionEditText = (EditText) findViewById(R.id.edit_group_introduction);
 		publibCheckBox = (CheckBox) findViewById(R.id.cb_public);
@@ -61,12 +63,22 @@ public class NewGroupActivity extends BaseActivity {
 		        }
 		    }
 		});
+		setListener();
+	}
+
+	private void setListener() {
+		titleBar.getRightLayout().setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				save();
+			}
+		});
 	}
 
 	/**
-	 * @param v
+	 * @param 
 	 */
-	public void save(View v) {
+	public void save() {
 		String name = groupNameEditText.getText().toString();
 		if (TextUtils.isEmpty(name)) {
 		    new EaseAlertDialog(this, R.string.Group_name_cannot_be_empty).show();
@@ -107,7 +119,7 @@ public class NewGroupActivity extends BaseActivity {
 						}else{
 						    option.style = memberCheckbox.isChecked()?EMGroupStyle.EMGroupStylePrivateMemberCanInvite:EMGroupStyle.EMGroupStylePrivateOnlyOwnerInvite;
 						}
-                        EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
+						EMGroup group = EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
 						runOnUiThread(new Runnable() {
 							public void run() {
 								progressDialog.dismiss();
