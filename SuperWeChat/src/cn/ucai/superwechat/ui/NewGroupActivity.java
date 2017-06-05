@@ -175,7 +175,7 @@ public class NewGroupActivity extends BaseActivity {
                             option.style = memberCheckbox.isChecked() ? EMGroupStyle.EMGroupStylePrivateMemberCanInvite : EMGroupStyle.EMGroupStylePrivateOnlyOwnerInvite;
                         }
                         EMGroup group = EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
-                        createAppGroup(group);
+                        createAppGroup(group,members);
 
                     } catch (final HyphenateException e) {
                         createFaile(e);
@@ -210,7 +210,7 @@ public class NewGroupActivity extends BaseActivity {
         });
     }
 
-    private void createAppGroup(EMGroup group) {
+    private void createAppGroup(final EMGroup group, final String[] members) {
         Log.e(TAG,"创建Appgroup：file"+file.getAbsolutePath());
         model.createGroup(NewGroupActivity.this, group.getGroupId(), group.getGroupName(), group.getDescription(),
                 group.getOwner(), group.isPublic(), group.isMemberAllowToInvite(), file,
@@ -223,7 +223,9 @@ public class NewGroupActivity extends BaseActivity {
                             Result<Group> result = ResultUtils.getResultFromJson(s, Group.class);
                             if (result != null && result.isRetMsg()) {
                                 isSuccess = true;
-                                createSuccess();
+                                if (members!=null && members.length > 0){
+                                    addGroupMembers(members,group.getGroupId());
+                                }
                             }
                         }
                         if (!isSuccess) {
@@ -236,6 +238,37 @@ public class NewGroupActivity extends BaseActivity {
                         createFaile(null);
                     }
                 });
+    }
+
+    private void addGroupMembers(String[] members,String hxid) {
+        StringBuilder sb = new StringBuilder();
+        for (String member : members) {
+            sb.append(member);
+            sb.append(",");
+        }
+        IGroupModel groupModel = new GroupModel();
+        groupModel.addGroupMembers(NewGroupActivity.this, sb.toString(), hxid, new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.e(TAG,s);
+                boolean isSuccess = false;
+                if (s != null) {
+                    Result<Group> result = ResultUtils.getResultFromJson(s, Group.class);
+                    if (result != null && result.isRetMsg()) {
+                        isSuccess = true;
+                        createSuccess();
+                    }
+                }
+                if (!isSuccess) {
+                    createFaile(null);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
     }
 
     public void startPhotoZoom(Uri uri) {

@@ -126,7 +126,7 @@ public class GroupAdapter extends ArrayAdapter<EMGroup> {
 		return convertView;
 	}
 
-	
+
 
 	@Override
 	public int getCount() {

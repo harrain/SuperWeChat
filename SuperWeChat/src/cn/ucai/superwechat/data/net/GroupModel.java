@@ -27,4 +27,15 @@ public class GroupModel implements IGroupModel {
                 .post()
                 .execute(listener);
     }
+
+    @Override
+    public void addGroupMembers(Context context, String usernames, String hxid, OnCompleteListener<String> listener) {
+        OkHttpUtils<String> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_ADD_GROUP_MEMBERS)
+                .addParam(I.Member.USER_NAME,usernames)
+                .addParam(I.Group.HX_ID,hxid)
+                .targetClass(String.class)
+                .post()
+                .execute(listener);
+}
 }
