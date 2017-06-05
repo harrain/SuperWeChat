@@ -232,7 +232,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
      * decline invitation
      * 
      * @param
-     * @param 
+     * @param
      */
     private void refuseInvitation(final Button buttonAgree, final Button buttonRefuse, final InviteMessage msg) {
         final ProgressDialog pd = new ProgressDialog(context);
