@@ -88,15 +88,18 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 		    
 			if(msg.getGroupId() != null){ // show group name
 				holder.groupContainer.setVisibility(View.VISIBLE);
-				holder.groupname.setText(msg.getGroupName());
+				holder.groupname.setText(":"+msg.getGroupId());
+				EaseUserUtils.setGroupAvatarByHxid(context,msg.getGroupId(),holder.avator);
+				holder.name.setText(msg.getGroupName());
 			} else{
 				holder.groupContainer.setVisibility(View.GONE);
+				EaseUserUtils.setAvatar(context,msg.getAvatar(),holder.avator);
+				EaseUserUtils.setAppUserNick(msg.getNickname(),holder.name);
 			}
 			
 			holder.reason.setText(msg.getReason());
 			//holder.name.setText(msg.getFrom());
-			EaseUserUtils.setAppUserNick(msg.getNickname(),holder.name);
-			EaseUserUtils.setAvatar(context,msg.getAvatar(),holder.avator);
+
 			// holder.time.setText(DateUtils.getTimestampString(new
 			// Date(msg.getTime())));
 			if (msg.getStatus() == InviteMesageStatus.BEAGREED) {
@@ -170,8 +173,8 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 	/**
 	 * accept invitation
 	 * 
-	 * @param button
-	 * @param username
+	 * @param
+	 * @param
 	 */
 	private void acceptInvitation(final Button buttonAgree, final Button buttonRefuse, final InviteMessage msg) {
 		final ProgressDialog pd = new ProgressDialog(context);
@@ -228,8 +231,8 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 	/**
      * decline invitation
      * 
-     * @param button
-     * @param username
+     * @param
+     * @param 
      */
     private void refuseInvitation(final Button buttonAgree, final Button buttonRefuse, final InviteMessage msg) {
         final ProgressDialog pd = new ProgressDialog(context);

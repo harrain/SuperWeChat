@@ -178,6 +178,7 @@ public class NewGroupActivity extends BaseActivity {
                         createAppGroup(group,members);
 
                     } catch (final HyphenateException e) {
+                        Log.e(TAG,"环信异常："+e.getMessage());
                         createFaile(e);
                     }
 
@@ -217,7 +218,7 @@ public class NewGroupActivity extends BaseActivity {
                 new OnCompleteListener<String>() {
                     @Override
                     public void onSuccess(String s) {
-                        Log.e(TAG,s);
+                        Log.e(TAG,"createAppGroup:"+s);
                         boolean isSuccess = false;
                         if (s != null) {
                             Result<Group> result = ResultUtils.getResultFromJson(s, Group.class);
@@ -229,12 +230,14 @@ public class NewGroupActivity extends BaseActivity {
                             }
                         }
                         if (!isSuccess) {
+                            Log.e(TAG,"createAppGroup:onSuccess.."+"fail");
                             createFaile(null);
                         }
                     }
 
                     @Override
                     public void onError(String error) {
+                        Log.e(TAG,"createAppGroup:onError.."+error);
                         createFaile(null);
                     }
                 });
@@ -246,11 +249,12 @@ public class NewGroupActivity extends BaseActivity {
             sb.append(member);
             sb.append(",");
         }
+        Log.e(TAG,"addGroupMembers:usernames.."+sb.toString());
         IGroupModel groupModel = new GroupModel();
         groupModel.addGroupMembers(NewGroupActivity.this, sb.toString(), hxid, new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String s) {
-                Log.e(TAG,s);
+                Log.e(TAG,"addGroupMembers:"+s);
                 boolean isSuccess = false;
                 if (s != null) {
                     Result<Group> result = ResultUtils.getResultFromJson(s, Group.class);
@@ -260,13 +264,15 @@ public class NewGroupActivity extends BaseActivity {
                     }
                 }
                 if (!isSuccess) {
+                    Log.e(TAG,"addGroupMembers:onSuccess..fail");
                     createFaile(null);
                 }
             }
 
             @Override
             public void onError(String error) {
-
+                Log.e(TAG,"addGroupMembers:onError.."+error);
+                createFaile(null);
             }
         });
     }
@@ -293,14 +299,15 @@ public class NewGroupActivity extends BaseActivity {
             String p = file.getAbsolutePath();
             if (TextUtils.isEmpty(p)){
                 Log.e(TAG,"群组头像路径为空");
+            }else {
+                selectGalary.setText(p);
             }
-            selectGalary.setText(p);
         }
     }
 
     private File saveBitmapFile(Bitmap bitmap) {
         if (bitmap != null) {
-            String imagePath = getAvatarPath(this, I.GROUP_ICON)+"/"+getAvatarName()+".jpg";
+            String imagePath = getAvatarPath(this, I.AVATAR_TYPE_GROUP_PATH)+"/"+getAvatarName()+".jpg";
             File file = new File(imagePath);//将要保存图片的路径
             L.e("file path="+file.getAbsolutePath());
             try {
