@@ -72,12 +72,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
     MFViewPager mLayoutViewpage;
     @BindView(R.id.layout_tabhost)
     DMTabHost mLayoutTabhost;
-    /*// textview for unread message count
-    private TextView unreadLabel;
-    // textview for unread event message
-    private TextView unreadAddressLable;
 
-    private Button[] mTabs;*/
     private ContactListFragment contactListFragment;
     private Fragment[] fragments;
     private int index;
@@ -201,14 +196,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
      * init views
      */
     private void initView() {
-        /*unreadLabel = (TextView) findViewById(R.id.unread_msg_number);
-        unreadAddressLable = (TextView) findViewById(R.id.unread_address_number);
-        mTabs = new Button[3];
-        mTabs[0] = (Button) findViewById(R.id.btn_conversation);
-        mTabs[1] = (Button) findViewById(R.id.btn_address_list);
-        mTabs[2] = (Button) findViewById(R.id.btn_setting);
-        // select first tab
-        mTabs[0].setSelected(true);*/
+
     }
 
     /**
@@ -421,6 +409,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
      */
     public void updateUnreadLabel() {
         int count = getUnreadMsgCountTotal();
+        mLayoutTabhost.setUnreadCount(0,count);
         /*if (count > 0) {
             unreadLabel.setText(String.valueOf(count));
             unreadLabel.setVisibility(View.VISIBLE);
