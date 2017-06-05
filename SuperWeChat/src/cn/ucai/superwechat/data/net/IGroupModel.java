@@ -14,4 +14,6 @@ public interface IGroupModel {
     void createGroup(Context context, String hxid, String name, String des, String owner,
                      boolean isPublic, boolean isInviets, File file, OnCompleteListener<String> listener);
     void addGroupMembers(Context context,String usernames,String hxid,OnCompleteListener<String> listener);
+
+    void updateGroupName(Context context,String hxid,String groupname,OnCompleteListener<String> listener);
 }

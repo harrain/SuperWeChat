@@ -19,10 +19,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -38,7 +40,16 @@ import com.hyphenate.chat.EMConversation.EMConversationType;
 import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMPushConfigs;
+
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.data.OnCompleteListener;
+import cn.ucai.superwechat.data.net.GroupModel;
+import cn.ucai.superwechat.data.net.IGroupModel;
+import cn.ucai.superwechat.utils.Result;
+import cn.ucai.superwechat.utils.ResultUtils;
+
+import com.hyphenate.easeui.domain.Group;
 import com.hyphenate.easeui.ui.EaseGroupListener;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
@@ -147,6 +158,15 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		membersAdapter = new GridAdapter(this, R.layout.em_grid_owner, new ArrayList<String>());
 		EaseExpandGridView userGridview = (EaseExpandGridView) findViewById(R.id.gridview);
 		userGridview.setAdapter(membersAdapter);
+		/*userGridview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				geti
+				Intent intent = new Intent(GroupDetailsActivity.this,ProfileActivity.class);
+				startActivity(intent);
+				return true;
+			}
+		});*/
 
 		ownerAdminAdapter = new OwnerAdminAdapter(this, R.layout.em_grid_owner, new ArrayList<String>());
 		EaseExpandGridView ownerAdminGridview = (EaseExpandGridView) findViewById(R.id.owner_and_administrators_grid_view);
@@ -282,9 +302,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 								EMClient.getInstance().groupManager().changeGroupName(groupId, returnData);
 								runOnUiThread(new Runnable() {
 									public void run() {
-										titleBar.setTitle(group.getGroupName() + "(" + group.getMemberCount() + ")");
-										progressDialog.dismiss();
-										Toast.makeText(getApplicationContext(), st6, Toast.LENGTH_SHORT).show();
+										updateAppGroupName(st6,groupId,returnData);
 									}
 								});
 
@@ -335,6 +353,39 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 				break;
 			}
 		}
+	}
+
+	private void updateAppGroupName(final String st6, String hxid, String name) {
+		IGroupModel groupModel = new GroupModel();
+		groupModel.updateGroupName(GroupDetailsActivity.this, hxid, name, new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String s) {
+				Log.e(TAG,"updateAppGroupName:"+s);
+				boolean isSuccess = false;
+				if (s != null){
+					Result<Group> result = ResultUtils.getResultFromJson(s,Group.class);
+					if (result!=null && result.isRetMsg()){
+						isSuccess = true;
+						onSuccessDone(st6);
+					}
+				}
+				if (!isSuccess){
+					progressDialog.dismiss();
+					Log.e(TAG,"updateAppGroupName:fail");
+				}
+			}
+
+			@Override
+			public void onError(String error) {
+				Log.e(TAG,"updateAppGroupName:"+error);
+			}
+		});
+	}
+
+	private void onSuccessDone(String st6){
+		titleBar.setTitle(group.getGroupName() + "(" + group.getMemberCount() + ")");
+		progressDialog.dismiss();
+		Toast.makeText(getApplicationContext(), st6, Toast.LENGTH_SHORT).show();
 	}
 
 	private void refreshOwnerAdminAdapter() {
