@@ -123,7 +123,7 @@ public class EaseUserUtils {
     }
 
     public static void setAvatar(Context context,String avatarPath,ImageView imageView){
-        if (avatarPath!=null){
+        /*if (avatarPath!=null){
             try {
                 int avatarResId = Integer.parseInt(avatarPath);
                 Glide.with(context).load(avatarResId).into(imageView);
@@ -134,7 +134,36 @@ public class EaseUserUtils {
             }
         }else{
             Glide.with(context).load(R.drawable.ease_default_avatar).into(imageView);
-        }
+        }*/
+        setAvatar(context,avatarPath,imageView,false);
     }
-    
+
+    public static void setAvatar(Context context,String avatarPath,ImageView imageView,boolean isGroup){
+        if (avatarPath!=null){
+            try {
+                int avatarResId = Integer.parseInt(avatarPath);
+                Glide.with(context).load(avatarResId).into(imageView);
+            } catch (Exception e) {
+                //use default avatar
+                Glide.with(context).load(avatarPath).diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .placeholder(isGroup?R.drawable.ease_group_icon:R.drawable.ease_default_avatar).into(imageView);
+            }
+        }else{
+            Glide.with(context).load(isGroup?R.drawable.ease_group_icon:R.drawable.ease_default_avatar).into(imageView);
+        }
+
+    }
+
+    public static void setGroupAvatarByHxid(Context context,String hxid,ImageView imageView){
+        setGroupAvatar(context,getAvatarPath(hxid),imageView);
+    }
+
+    public static void setGroupAvatar(Context context,String avatarPath,ImageView imageView){
+
+        setAvatar(context,avatarPath,imageView,true);
+    }
+
+    public static String getAvatarPath(String hxid){
+        return "http://101.251.196.90:8080/SuperWeChatServerV2.0/downloadAvatar?name_or_hxid="+hxid+"&avatarType=group_icon&m_avatar_suffix=.jpg"+"&updatetime=";
+    }
 }

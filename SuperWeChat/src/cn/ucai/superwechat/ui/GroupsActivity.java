@@ -33,6 +33,9 @@ import com.hyphenate.chat.EMGroup;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.adapter.GroupAdapter;
+import cn.ucai.superwechat.data.net.IUserModel;
+import cn.ucai.superwechat.data.net.UserModel;
+
 import com.hyphenate.exceptions.HyphenateException;
 
 import java.util.List;
@@ -135,8 +138,10 @@ public class GroupsActivity extends BaseActivity {
 				return false;
 			}
 		});
-		
+
 	}
+
+
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -48,6 +48,7 @@ import java.io.IOException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.data.OnCompleteListener;
 import cn.ucai.superwechat.data.net.GroupModel;
@@ -216,6 +217,7 @@ public class NewGroupActivity extends BaseActivity {
                 new OnCompleteListener<String>() {
                     @Override
                     public void onSuccess(String s) {
+                        Log.e(TAG,s);
                         boolean isSuccess = false;
                         if (s != null) {
                             Result<Group> result = ResultUtils.getResultFromJson(s, Group.class);
@@ -265,7 +267,7 @@ public class NewGroupActivity extends BaseActivity {
 
     private File saveBitmapFile(Bitmap bitmap) {
         if (bitmap != null) {
-            String imagePath = getAvatarPath(this, "groupavatar")+"/"+"1.jpg";
+            String imagePath = getAvatarPath(this, I.GROUP_ICON)+"/"+getAvatarName()+".jpg";
             File file = new File(imagePath);//将要保存图片的路径
             L.e("file path="+file.getAbsolutePath());
             try {
@@ -289,6 +291,11 @@ public class NewGroupActivity extends BaseActivity {
         }
         return folder.getAbsolutePath();
     }
+
+	private String getAvatarName() {
+		String avatarName = String.valueOf(System.currentTimeMillis()) ;
+		return avatarName;
+	}
 
     public void back(View view) {
         finish();

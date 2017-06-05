@@ -3,6 +3,7 @@ package cn.ucai.superwechat.data.net;
 import android.content.Context;
 
 import java.io.File;
+import java.util.List;
 
 
 import cn.ucai.superwechat.data.OnCompleteListener;
@@ -30,6 +31,8 @@ public interface IUserModel {
     void uploadAvatar(Context context, String username, String avatarType, File file,
                       OnCompleteListener<String> listener);
     void loadContact(Context context,String username,OnCompleteListener<String> listener);
+
+    void downloadAvatar(Context context, String id, List<String> avatarType,List<String> avatarSuffic,OnCompleteListener<String> listener);
     /*void loadCollectsCount(Context context, String username, OnCompleteListener<MessageBean> listener);
     void addCollect(Context context, String goodsId, String username, OnCompleteListener<MessageBean> listener);
     void removeCollect(Context context, String goodsId, String username, OnCompleteListener<MessageBean> listener);

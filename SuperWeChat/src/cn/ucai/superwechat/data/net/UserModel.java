@@ -3,6 +3,7 @@ package cn.ucai.superwechat.data.net;
 import android.content.Context;
 
 import java.io.File;
+import java.util.List;
 
 import cn.ucai.superwechat.I;
 
@@ -105,6 +106,18 @@ public class UserModel implements IUserModel {
                 .post()
                 .targetClass(String.class)
                 .execute(listener);
+    }
+
+    @Override
+    public void downloadAvatar(Context context, String id, List<String> avatarType, List<String> avatarSuffic, OnCompleteListener<String> listener) {
+        OkHttpUtils<String> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_DOWNLOAD_AVATAR)
+                .addParam(I.NAME_OR_HXID,id)
+                .addParam(I.AVATAR_TYPE,I.AVATAR_TYPE_GROUP_PATH)
+                .addParam(I.Avatar.AVATAR_SUFFIX,I.AVATAR_SUFFIX_JPG)
+                .targetClass(String.class)
+                .execute(listener);
+
     }
 
     /*@Override
