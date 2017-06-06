@@ -2,6 +2,7 @@ package cn.ucai.superwechat.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -44,15 +45,17 @@ public class ProfileActivity extends BaseActivity {
     User user = null;
     private String username;
     private IUserModel model;
+    private static String TAG = "ProfileActivity";
 
     @Override
     protected void onCreate(Bundle arg0) {
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
         super.onCreate(arg0);
-        initData();
         showLeftBack();
         model = new UserModel();
+        initData();
+
     }
 
     @Override
@@ -63,22 +66,24 @@ public class ProfileActivity extends BaseActivity {
 
     private void initData() {
         username = getIntent().getStringExtra(I.User.USER_NAME);
-        if (username != null){
-            user = SuperWeChatHelper.getInstance().getAppContactList().get(username);
-            if (user == null && username.equals(EMClient.getInstance().getCurrentUser())){
-                user = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentAppUserInfo();
-            }
+        user = (User) getIntent().getSerializableExtra(I.User.TABLE_NAME);
+        if (username == null && user == null){
+            finish();
+            return;
         }
-        if (user == null){
-            user = (User) getIntent().getSerializableExtra(I.User.TABLE_NAME);
+        if (user == null) {
+            user = SuperWeChatHelper.getInstance().getAppContactList().get(username);
+        }
+        if (user == null && username.equals(EMClient.getInstance().getCurrentUser())){
+            user = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentAppUserInfo();
         }
 
         if (user!=null){
             showInfo();
-            syncUserInfo();
-        }else if (username == null){
-            finish();
+        }else{
+            showUser();
         }
+        syncUserInfo();
     }
 
     private void syncUserInfo() {
@@ -86,6 +91,7 @@ public class ProfileActivity extends BaseActivity {
         model.loadUserInfo(ProfileActivity.this, username, new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String s) {
+                Log.e(TAG,"syncUserInfo:"+s);
                 boolean isSuccess = false;
                 if (s != null){
                     Result<User> result = ResultUtils.getResultFromJson(s,User.class);
@@ -128,7 +134,7 @@ public class ProfileActivity extends BaseActivity {
 
             mTvUserinfoName.setText(user.getMUserName());
             EaseUserUtils.setAppUserNick(user.getMUserNick(), mTvUserinfoNick);
-            EaseUserUtils.setAppUserAvatar(ProfileActivity.this, user.getAvatar(), mProfileImage);
+            EaseUserUtils.setAppUserAvatar(ProfileActivity.this, username, mProfileImage);
             showButton(SuperWeChatHelper.getInstance().getAppContactList().containsKey(user.getMUserName()));
 
     }
