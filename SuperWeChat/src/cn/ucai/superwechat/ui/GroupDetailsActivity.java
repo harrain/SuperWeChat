@@ -484,11 +484,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 					EMClient.getInstance().groupManager().leaveGroup(groupId);
 					runOnUiThread(new Runnable() {
 						public void run() {
-							progressDialog.dismiss();
-							setResult(RESULT_OK);
-							finish();
-							if(ChatActivity.activityInstance != null)
-							    ChatActivity.activityInstance.finish();
+							removeGroupMember(groupId,EMClient.getInstance().getCurrentUser());
 						}
 					});
 				} catch (final Exception e) {
@@ -503,6 +499,14 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		}).start();
 	}
 
+	private void exitSuccess(){
+		progressDialog.dismiss();
+		setResult(RESULT_OK);
+		finish();
+		if(ChatActivity.activityInstance != null)
+			ChatActivity.activityInstance.finish();
+	}
+
 	/**
 	 * 解散群组
 	 * 
@@ -515,11 +519,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 					EMClient.getInstance().groupManager().destroyGroup(groupId);
 					runOnUiThread(new Runnable() {
 						public void run() {
-							progressDialog.dismiss();
-							setResult(RESULT_OK);
-							finish();
-							if(ChatActivity.activityInstance != null)
-							    ChatActivity.activityInstance.finish();
+							deleteAppGroup(groupId);
 						}
 					});
 				} catch (final Exception e) {
@@ -532,6 +532,31 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 				}
 			}
 		}).start();
+	}
+
+	private void deleteAppGroup(String groupId) {
+		IGroupModel groupModel = new GroupModel();
+		groupModel.deleteGroupByHxid(GroupDetailsActivity.this, groupId, new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String s) {
+				Log.e(TAG,"deleteAppGroup:"+s);
+				boolean isSuccess = false;
+				if (s!= null){
+					isSuccess = true;
+					exitSuccess();
+				}
+				if (!isSuccess){
+					progressDialog.dismiss();
+					Log.e(TAG,"deleteAppGroup:fail");
+				}
+			}
+
+			@Override
+			public void onError(String error) {
+				Log.e(TAG,"deleteAppGroup:error.."+error);
+				progressDialog.dismiss();
+			}
+		});
 	}
 
 	/**
@@ -807,6 +832,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 										break;
 									case R.id.menu_item_remove_member:
 										EMClient.getInstance().groupManager().removeUserFromGroup(groupId, operationUserId);
+										removeGroupMember(groupId,operationUserId);
 										break;
 									case R.id.menu_item_add_to_blacklist:
 										EMClient.getInstance().groupManager().blockUser(groupId, operationUserId);
@@ -855,6 +881,12 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 			});
 		}
 		return dialog;
+	}
+
+	/**
+	 * 删除己服的单个群组成员
+	 */
+	private void removeGroupMember(String hxid,String username) {
 	}
 
 	void setVisibility(Dialog viewGroups, int[] ids, boolean[] visibilities) throws Exception {
