@@ -66,12 +66,7 @@ public class PublicGroupsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         showLeftBack();
         titleBar.getRightLayout().setVisibility(View.INVISIBLE);
-        titleBar.setLeftLayoutClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                back();
-            }
-        });
+
 		pb = (ProgressBar) findViewById(R.id.progressBar);
 		listView = (ListView) findViewById(R.id.list);
 		groupsList = new ArrayList<EMGroupInfo>();
@@ -85,7 +80,12 @@ public class PublicGroupsActivity extends BaseActivity {
         footLoadingLayout.setVisibility(View.GONE);
 
         loadAndShowData();
-
+        titleBar.setRightLayoutClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PublicGroupsActivity.this, PublicGroupsSeachActivity.class));
+            }
+        });
         listView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
@@ -116,10 +116,7 @@ public class PublicGroupsActivity extends BaseActivity {
         
 	}
 
-	public void search(View view){
-	    startActivity(new Intent(this, PublicGroupsSeachActivity.class));
-	}
-	
+
 	private void loadAndShowData(){
 	    new Thread(new Runnable() {
 
@@ -132,7 +129,7 @@ public class PublicGroupsActivity extends BaseActivity {
 
                         public void run() {
 
-                            titleBar.getRightLayout().setVisibility(View.INVISIBLE);
+                            titleBar.getRightLayout().setVisibility(View.VISIBLE);
                             groupsList.addAll(returnGroups);
                             if(returnGroups.size() != 0){
                                 cursor = result.getCursor();
