@@ -556,21 +556,59 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 					refreshMembersAdapter();
 					runOnUiThread(new Runnable() {
 						public void run() {
-							titleBar.setTitle(group.getGroupName() + "(" + group.getMemberCount()
-									+ st);
-							progressDialog.dismiss();
+							addGroupMembers(newmembers,groupId,st6);
 						}
 					});
 				} catch (final Exception e) {
 					runOnUiThread(new Runnable() {
 						public void run() {
-							progressDialog.dismiss();
-							Toast.makeText(getApplicationContext(), st6 + e.getMessage(), Toast.LENGTH_LONG).show();
+							createFaile(st6,e);
 						}
 					});
 				}
 			}
 		}).start();
+	}
+
+	private void addGroupMembers(String[] members,String hxid,String st6) {
+		StringBuilder sb = new StringBuilder();
+		for (String member : members) {
+			sb.append(member);
+			sb.append(",");
+		}
+		Log.e(TAG,"addGroupMembers:usernames.."+sb.toString());
+		IGroupModel groupModel = new GroupModel();
+		groupModel.addGroupMembers(GroupDetailsActivity.this, sb.toString(), hxid, new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String s) {
+				Log.e(TAG,"addGroupMembers:"+s);
+				boolean isSuccess = false;
+				if (s != null) {
+					Result<Group> result = ResultUtils.getResultFromJson(s, Group.class);
+					if (result != null && result.isRetMsg()) {
+						isSuccess = true;
+						titleBar.setTitle(group.getGroupName() + "(" + group.getMemberCount()
+								+ st);
+						progressDialog.dismiss();
+					}
+				}
+				if (!isSuccess) {
+					Log.e(TAG,"addGroupMembers:onSuccess..fail");
+					progressDialog.dismiss();
+				}
+			}
+
+			@Override
+			public void onError(String error) {
+				Log.e(TAG,"addGroupMembers:onError.."+error);
+				progressDialog.dismiss();
+			}
+		});
+	}
+
+	private void createFaile(String st6,Exception e){
+		progressDialog.dismiss();
+		Toast.makeText(getApplicationContext(), st6 + e.getMessage(), Toast.LENGTH_LONG).show();
 	}
 
 	@Override

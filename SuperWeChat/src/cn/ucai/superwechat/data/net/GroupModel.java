@@ -36,23 +36,41 @@ public class GroupModel implements IGroupModel {
                 .addParam(I.Member.USER_NAME,usernames)
                 .addParam(I.Group.HX_ID,hxid)
                 .targetClass(String.class)
-                .post()
                 .execute(listener);
     }
 
     @Override
     public void updateGroupName(Context context, String hxid, String groupname, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
-        utils.setRequestUrl(I.REQUEST_UPDATE_GROUP_NAME)
-                .addParam(I.Group.GROUP_ID,hxid)
+        utils.setRequestUrl(I.REQUEST_UPDATE_GROUP_NAME_BY_HXID)
+                .addParam(I.Group.HX_ID,hxid)
                 .addParam(I.Group.NAME,groupname)
                 .targetClass(String.class)
-                .post()
                 .execute(listener);
     }
 
     @Override
-    public void deleteGroup(Context context, String hxid, OnCompleteListener<String> listener) {
+    public void deleteGroupByHxid(Context context, String hxid, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_DELETE_GROUP_BY_HXID)
+                .addParam(I.Group.HX_ID,hxid)
+                .targetClass(String.class)
+                .execute(listener);
+    }
+
+    @Override
+    public void addGroupMember(Context context, String hxid, String member, OnCompleteListener<String> listener) {
+        OkHttpUtils<String> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_ADD_GROUP_MEMBER)
+                .addParam(I.Member.USER_NAME,member)
+                .addParam(I.Group.HX_ID,hxid)
+                .targetClass(String.class)
+                .execute(listener);
+    }
+
+    @Override
+    public void removeGroupMemberByHxid(Context context, String hxid, String username, OnCompleteListener<String> listener) {
+        OkHttpUtils<String> utils = new OkHttpUtils<>(context);
+
     }
 }
