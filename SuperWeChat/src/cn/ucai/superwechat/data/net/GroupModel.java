@@ -50,4 +50,9 @@ public class GroupModel implements IGroupModel {
                 .post()
                 .execute(listener);
     }
+
+    @Override
+    public void deleteGroup(Context context, String hxid, OnCompleteListener<String> listener) {
+        OkHttpUtils<String> utils = new OkHttpUtils<>(context);
+    }
 }
