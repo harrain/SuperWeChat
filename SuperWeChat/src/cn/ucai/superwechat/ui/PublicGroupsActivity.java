@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -36,6 +37,8 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroupInfo;
 import cn.ucai.superwechat.R;
+
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.exceptions.HyphenateException;
 
 import java.util.ArrayList;
@@ -55,18 +58,24 @@ public class PublicGroupsActivity extends BaseActivity {
     private LinearLayout footLoadingLayout;
     private ProgressBar footLoadingPB;
     private TextView footLoadingText;
-    private Button searchBtn;
-    
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.em_activity_public_groups);
-
+        super.onCreate(savedInstanceState);
+        showLeftBack();
+        titleBar.getRightLayout().setVisibility(View.INVISIBLE);
+        titleBar.setLeftLayoutClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                back();
+            }
+        });
 		pb = (ProgressBar) findViewById(R.id.progressBar);
 		listView = (ListView) findViewById(R.id.list);
 		groupsList = new ArrayList<EMGroupInfo>();
-		searchBtn = (Button) findViewById(R.id.btn_search);
+
 		
 		View footView = getLayoutInflater().inflate(R.layout.em_listview_footer_view, listView, false);
         footLoadingLayout = (LinearLayout) footView.findViewById(R.id.loading_layout);
@@ -122,7 +131,8 @@ public class PublicGroupsActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
 
                         public void run() {
-                            searchBtn.setVisibility(View.VISIBLE);
+
+                            titleBar.getRightLayout().setVisibility(View.INVISIBLE);
                             groupsList.addAll(returnGroups);
                             if(returnGroups.size() != 0){
                                 cursor = result.getCursor();
@@ -175,17 +185,30 @@ public class PublicGroupsActivity extends BaseActivity {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.em_row_group, parent, false);
-			}
+                holder = new ViewHolder();
+                holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
+                holder.name = ((TextView) convertView.findViewById(R.id.name));
+                convertView.setTag(holder);
+			}else {
+                holder = (ViewHolder) convertView.getTag();
+            }
 
-			((TextView) convertView.findViewById(R.id.name)).setText(getItem(position).getGroupName());
+			holder.name.setText(getItem(position).getGroupName());
+            EaseUserUtils.setGroupAvatarByHxid(PublicGroupsActivity.this,getItem(position).getGroupId(),holder.avatar);
 
 			return convertView;
 		}
+
+		class ViewHolder {
+            ImageView avatar;
+            TextView name;
+        }
 	}
 	
-	public void back(View view){
+	public void back(){
 		finish();
 	}
 }
