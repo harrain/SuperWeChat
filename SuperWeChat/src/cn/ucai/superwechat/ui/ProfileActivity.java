@@ -15,10 +15,17 @@ import com.hyphenate.easeui.utils.EaseUserUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.data.OnCompleteListener;
+import cn.ucai.superwechat.data.net.IUserModel;
+import cn.ucai.superwechat.data.net.UserModel;
+import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.utils.MFGT;
+import cn.ucai.superwechat.utils.Result;
+import cn.ucai.superwechat.utils.ResultUtils;
 
 public class ProfileActivity extends BaseActivity {
 
@@ -35,6 +42,8 @@ public class ProfileActivity extends BaseActivity {
     @BindView(R.id.btn_send_video)
     Button mBtnSendVideo;
     User user = null;
+    private String username;
+    private IUserModel model;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -43,6 +52,7 @@ public class ProfileActivity extends BaseActivity {
         super.onCreate(arg0);
         initData();
         showLeftBack();
+        model = new UserModel();
     }
 
     @Override
@@ -52,10 +62,10 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void initData() {
-        String username = getIntent().getStringExtra(I.User.USER_NAME);
+        username = getIntent().getStringExtra(I.User.USER_NAME);
         if (username != null){
             user = SuperWeChatHelper.getInstance().getAppContactList().get(username);
-            if (user == null) {
+            if (user == null && username.equals(EMClient.getInstance().getCurrentUser())){
                 user = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentAppUserInfo();
             }
         }
@@ -65,9 +75,53 @@ public class ProfileActivity extends BaseActivity {
 
         if (user!=null){
             showInfo();
-        }else{
+            syncUserInfo();
+        }else if (username == null){
             finish();
         }
+    }
+
+    private void syncUserInfo() {
+
+        model.loadUserInfo(ProfileActivity.this, username, new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                boolean isSuccess = false;
+                if (s != null){
+                    Result<User> result = ResultUtils.getResultFromJson(s,User.class);
+                    if (result != null && result.isRetMsg()){
+                        isSuccess = true;
+                        user = result.getRetData();
+                    }
+                }
+                if (!isSuccess){
+                    showUser();
+                }else {
+                    showInfo();
+                    if (SuperWeChatHelper.getInstance().getAppContactList().containsKey(username)){
+                        saveUser2DB();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                showUser();
+            }
+        });
+    }
+
+    private void saveUser2DB(){
+        UserDao userDao = new UserDao(ProfileActivity.this);
+        userDao.saveAppContact(user);
+        SuperWeChatHelper.getInstance().getAppContactList().put(user.getMUserName(),user);
+        sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+    }
+
+    private void showUser(){
+        mTvUserinfoName.setText(username);
+        EaseUserUtils.setAppUserNick(username, mTvUserinfoNick);
+        EaseUserUtils.setAppUserAvatar(ProfileActivity.this, username, mProfileImage);
     }
 
     private void showInfo() {
